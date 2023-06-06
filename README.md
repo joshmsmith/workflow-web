@@ -237,7 +237,7 @@ After resetting the env and worker restart..
 
 ![console-workerdepositcompletes](./assets/WorkerDepositCompletes.png)
 
-Notice the Workflow History for the Deposit ACtivity has multiple retry count:
+Notice the Workflow History for the Deposit Activity has multiple retry count:
 
 ![tcloudui-workflowhistoryactivityretries](./assets/TCloudWorkflowHistoryDepositActivityRetries.png)
   
