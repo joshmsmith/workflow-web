@@ -14,17 +14,6 @@ Sample data:
 docker exec -it mysql mysql -u root -p
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 ...
-mysql> describe dataentry.accounts;
-+-----------------+--------------+------+-----+-------------------+-------------------+
-| Field           | Type         | Null | Key | Default           | Extra             |
-+-----------------+--------------+------+-----+-------------------+-------------------+
-| account_id      | int unsigned | NO   | PRI | NULL              | auto_increment    |
-| account_number  | int          | NO   |     | NULL              |                   |
-| account_name    | varchar(30)  | NO   | UNI | NULL              |                   |
-| account_balance | float        | NO   |     | NULL              |                   |
-| datestamp       | timestamp    | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
-+-----------------+--------------+------+-----+-------------------+-------------------+
-5 rows in set (0.01 sec)
 
 mysql> describe moneytransfer.transfer;
 +-------------+--------------+------+-----+-------------------+-------------------+
@@ -166,4 +155,14 @@ go run worker/main.go
 Note: the sample worker registers with the taskqueue to handle Workflow and Activity actions for the Transfer Workflow example
 
 
+## Temporal Cloud Web UI - Data Converter
 
+If you are encrypting the workflow payload content as well then to inspect the workflow history data values you can connect to a localhost codec server that implements /decode url configured for the same dataconverter used in your temporal client app code.   
+
+Start the local codec server (in a new terminal window) using:
+```
+cd dataconverter/codec-server-go
+go run server.go
+
+2023/06/06 11:48:46 Serve Http on 8888
+```
