@@ -169,7 +169,7 @@ go run server.go
 2023/06/06 11:48:46 Serve Http on 8888
 ```
 
-## App Transfers UI
+## WebApp Transfers UI
 
 ### List Transfers
 
@@ -230,7 +230,17 @@ func (m *BankIntermittentError) Error() string {
 ```
 so the activity will loop retrying, backing off etc..  
 
+![console-workerdepositerror](./assets/WorkerDepositError.png)
+
 Change the env to simulate bank back up and restart the worker.  
+After resetting the env and worker restart..
+
+![console-workerdepositcompletes](./assets/WorkerDepositCompletes.png)
+
+Notice the Workflow History for the Deposit ACtivity has multiple retry count:
+
+![tcloudui-workflowhistoryactivityretries](./assets/TCloudWorkflowHistoryDepositActivityRetries.png)
+  
 
 note: Should probably make this dynamic at some point :) 
 
