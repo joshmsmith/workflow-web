@@ -1,6 +1,8 @@
 # webapp with Temporal workflow backend
 Sample golang web app with local db task queue and Temporal Cloud workflow backend interaction
 
+![app-homepage](./assets/home.png)
+
 ## start mysql database
 The sample mysql database has been configured to run using docker-compose locally and initialise the database with users and sample data.
 ```
@@ -166,3 +168,69 @@ go run server.go
 
 2023/06/06 11:48:46 Serve Http on 8888
 ```
+
+## App Transfers UI
+
+### List Transfers
+
+![app-listtransfers](./assets/ListTransfers.png)
+
+### New Transfer
+
+![app-newtransfer](./assets/NewTransfer.png)
+
+Note: Currently the account names need to match the list hardcoded in banking-client.go:61 mockBank var   
+WIP: to populate this from the db table..
+
+### Transfer Details (COMPLETED)
+
+![app-completedtransferdetails](./assets/CompletedTransferDetails.png)
+
+### Transfer Details (FAILED)
+
+![app-failedtransferdetails](./assets/FailedTransferDetails.png)
+
+Note: This failed as ted's account was configured with 10 and a transfer of 100 was requested.  
+```go
+    {AccountNumber: "ted", Balance: 10},
+```
+
+The Activity retry policy will keep retrying unless the activity returns specific error types listed:
+```go
+    NonRetryableErrorTypes: []string{"InvalidAccountError", "InsufficientFundsError"},
+```
+
+![code-activityretrypolicy](./assets/ActivityRetryPolicy.png)
+
+
+## Test some failure states
+
+### Two workers, second one picks up workflow where left by "failed" worker
+
+There is a sleep timer between the Withdraw and Deposit Activities.  This allows two workers to be started and the one that is sleeping exited to observe the other picking up the transaction where it was left off.
+
+
+![console-worker](./assets/WorkerOutput.png)
+
+### Simulate Banking Client unavailable on Deposit
+
+You can disable the Banking app Deposit function by setting the environment variable:
+```
+export BANK_SERVICE_AVAILABLE=false
+(start worker..)
+```
+
+![code-bankservicedown](./assets/BankServiceDown.png)
+
+The Activity return policy does not contain:
+```go
+func (m *BankIntermittentError) Error() string {
+  return "Banking Service currently unavailable"
+}
+```
+so the activity will loop retrying, backing off etc..  
+
+Change the env to simulate bank back up and restart the worker.  
+
+note: Should probably make this dynamic at some point :) 
+
