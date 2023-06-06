@@ -89,6 +89,20 @@ export MYSQL_USER=mysqluser
 export MYSQL_PASSWORD=mysqlpw
 ```
 
+### Custom Search Attribute
+
+The demo app makes use of a custom search attribute that needs to be created in Temporal Cloud for the namespace:   
+
+Name: CustomStringField, Type: String
+
+Usage in workflow:
+```
+workflow.go:  _ = UpcertSearchAttribute(ctx, "CustomStringField", "PROCESSING")
+workflow.go:    _ = UpcertSearchAttribute(ctx, "CustomStringField", "FAILED")
+workflow.go:    _ = UpcertSearchAttribute(ctx, "CustomStringField", "FAILED")
+workflow.go:  _ = UpcertSearchAttribute(ctx, "CustomStringField", "COMPLETED")
+```
+   
 Note: If you simulate a banking service outage on a deposit activity the BANK_SERVICE_AVAILABLE env is read by the worker on startup so changing the env required a worker restart.
 
 ## Start the webapp and navigate to view the local tasks
