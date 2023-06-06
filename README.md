@@ -3,7 +3,7 @@ Sample golang web app with local db task queue and Temporal Cloud workflow backe
 
 ![app-homepage](./assets/home.png)
 
-## start mysql database
+## Start local app database first
 The sample mysql database has been configured to run using docker-compose locally and initialise the database with users and sample data.
 ```
 cd mysql
