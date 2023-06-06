@@ -1,0 +1,35 @@
+<div class="container">
+  <h1 class="logo"><a tabindex="2" accesskey="1" href="/"><img src="/static/temporal-blue.png" width="70" height="65" /></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Workflow WebApp</h1>
+
+<p><br><br>
+<hr><br>
+<div class="row g-0 bg-light position-relative">
+  <div class="col-md-4 mb-md-0 p-md-4">
+    <img src="https://cdn-icons-png.flaticon.com/512/6404/6404655.png" class="w-100" alt="transfer" width="260">
+  </div>
+  <div class="col-md-5 p-5 ps-md-0">
+    <h4 class="mt-0">Money Transfer Demo</h4>
+    <p>Golang sample web app with a mysql database table acting as a task queue feeding money transfer requests that are processed using Temporal Workflow and Activities.<br><br>
+       There is a background thread that polls the local request table and submits a new Temporal Workflow when required, the resultant workflow and run ids are updated in the local table as well as the end return result of the workflow.
+    </p>
+    <h3><a href="/transfers"><button type="button" class="btn btn-primary btn-sm">Launch</button></a></h3>
+  </div>
+</div>
+
+<hr><br>
+<div class="row g-0 bg-light position-relative">
+  <div class="col-md-4 mb-md-0 p-md-4">
+    <img src="https://cdn-icons-png.flaticon.com/512/2721/2721031.png" class="w-100" alt="accounts" width="260">
+  </div>
+  <div class="col-md-5 p-5 ps-md-0">
+    <h4 class="mt-0">Local Account Managment</h4>
+    <p>Golang CRUD app managing a mysql database table of user account entries with a balance column.<br>
+       Accounts can be listed, created and deleted.<br><br>
+       Note: At this time there is no association between these accounts and the Money Transfer demo account entries, these are currently hardcoded in the banking-client implementation program.</p>
+    <h3><a href="/accounts"><button type="button" class="btn btn-primary btn-sm">Launch</button></a></h3>
+  </div>
+</div>
+<hr><br>
+
+</div>
+

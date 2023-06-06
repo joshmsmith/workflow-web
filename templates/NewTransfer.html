@@ -1,0 +1,48 @@
+<div class="container">
+  <h1 class="logo"><a tabindex="2" accesskey="1" href="/"><img src="/static/money-transfer.jpeg" /></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Money Transfer</h1>
+
+{{ if .Success }}
+
+<br>
+<h3>New transfer submitted!</h3>
+<p><br>
+<a href="/transfers"><button type="button" class="btn btn-primary btn-sm">List Transfers</button></a>
+</p>
+
+{{ else }}
+
+<br>
+<h3>Submit New Transfer:</h3>
+<br>
+
+<form class="form-horizontal" action="/newtransfer" method="POST">
+
+  <div class="form-group">
+    <label for="origin" class="col-sm-3 control-label">Origin Account Name:</label>
+    <input type="text" class="col-sm-2" name="origin" size="10" placeholder="From">
+  </div>
+  <div class="form-group">
+    <label for="destination" class="col-sm-3 control-label">Destination Account Name:</label>
+    <input type="text" class="col-sm-2" name="destination" size="10" placeholder="To">
+  </div>
+  <div class="form-group">
+    <label for="amount" class="col-sm-3 control-label">Amount:</label>
+    <input type="text" class="col-sm-1" name="amount" size="5" placeholder="Amount">
+  </div>
+  <div class="form-group">
+    <label for="reference" class="col-sm-3 control-label">Reference:</label>
+    <input type="text" class="col-sm-3" name="reference" size="30" placeholder="Reference">
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-4">
+      <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+    </div>
+  </div>
+</form>
+
+<p><br><br>
+<a href="/transfers"><button type="button" class="btn btn-primary btn-sm">List Transfers</button></a>
+
+{{end}}
+</div>

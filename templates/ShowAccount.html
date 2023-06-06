@@ -1,0 +1,34 @@
+<div class="container">
+  <h1 class="logo"><a tabindex="2" accesskey="1" href="/"><img src="/static/bank-accounts.png" width=150 height=150 /></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Accounts</h1>
+
+<br>
+<h3>Acccount Details:</h3>
+<br>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <td>Account ID</td>
+      <td>Account Number</td>
+      <td>Account Name</td>
+      <td>Account Balance</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{ .AccountId }}</td>
+      <td>{{ .AccountNumber }}</td>
+      <td>{{ .AccountName }}</td>
+      <td>{{ .AccountBalance }}</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+<div align=right>
+<a href="/deleteaccount?name={{ .AccountName }}"><button type="button" class="btn btn-primary btn-sm">Delete Account</button></a>
+</div>
+
+<p><br><br>
+<a href="/accounts"><button type="button" class="btn btn-primary btn-sm">List Accounts</button></a>
+
+</div>
+

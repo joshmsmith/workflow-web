@@ -1,0 +1,64 @@
+body {background-color: white;}
+h1 {
+  color: white;
+  background-color: blue;
+  padding-left: 50px;
+  padding-top: 25px;
+  padding-bottom: 35px;
+  font-size: 35px;
+  width: 850px;
+  float: center;
+}
+h2 {
+  font-size: 25px;
+  color: black;
+  padding-left: 50px;
+}
+h3 {
+  font-size: 20px;
+  color: blue;
+  padding-left: 50px;
+}
+p {
+  font-size: 20px;
+  padding-left: 50px;
+}
+p.footer {
+  color: white;
+  font-size: 18px;
+  background-color: blue;
+  padding-left: 50px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 850px;
+  float: center;
+}
+a.footer {
+  color: white;
+  font-size: 18px;
+}
+table, form {
+  padding-left: 50px;
+  font-size: 20px;
+}
+thead {
+  color: blue;
+}
+tr > * + * {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+hr {
+  width: 720px;
+  text-align: left;
+  margin-left: 0;
+}
+div {
+  margin-bottom: 10px;
+}
+label {
+  display: inline-block;
+  width: 140px;
+  text-align: left;
+  color: blue;
+}

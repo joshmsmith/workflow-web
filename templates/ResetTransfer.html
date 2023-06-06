@@ -1,0 +1,17 @@
+<div class="container">
+  <h1 class="logo"><a tabindex="2" accesskey="1" href="/"><img src="/static/money-transfer.jpeg" /></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Money Transfer</h1>
+
+{{ if .Success }}
+<br>
+<h3>Transfer Resubmitted</h3>
+
+<p><br>
+<a href="/transfers"><button type="button" class="btn btn-primary btn-sm">List Transfers</button></a>
+</p>
+
+{{ else }}
+<br>
+<h3>Transfer entry not found!</h3>
+
+{{end}}
+</div>
