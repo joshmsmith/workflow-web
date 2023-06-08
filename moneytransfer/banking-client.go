@@ -23,7 +23,7 @@ type bank struct {
 }
 
 /* findAccount */
-func (b bank) findAccount(accountNumber string) (account, error) {
+func (b bank) findAccount (accountNumber string) (account, error) {
 
   for _, v := range b.Accounts {
     if v.AccountNumber == accountNumber {
@@ -31,6 +31,20 @@ func (b bank) findAccount(accountNumber string) (account, error) {
     }
   }
   return account{}, errors.New("Account not found")
+}
+
+/* findDbAccount */
+func (b bank) findDbAccount (accountNumber string) (account, error) {
+
+  dbaccs := ReadDbAccounts()
+
+  for _, dbacc := range dbaccs {
+    if dbacc.AccountName == accountNumber {
+      return account{AccountNumber: dbacc.AccountName,
+                     Balance: int64(dbacc.AccountBalance)}, nil
+      }
+    }
+    return account{}, errors.New("Account not found in database")
 }
 
 /* InsufficientFundsError - raised when the account doesn't have enough money. */
@@ -62,22 +76,7 @@ var mockBank = &bank{
   Accounts: []account{
     {AccountNumber: "85-150", Balance: 2000},
     {AccountNumber: "43-812", Balance: 0},
-    {AccountNumber: "1001", Balance: 110},  // jane
-    {AccountNumber: "1002", Balance: 1000}, // bill
-    {AccountNumber: "1003", Balance: 10},   // ted
-    {AccountNumber: "1004", Balance: 1000}, // sally
-    {AccountNumber: "1005", Balance: 1000}, // harry
-    {AccountNumber: "1006", Balance: 1000}, // jim
-    {AccountNumber: "jane", Balance: 110},
-    {AccountNumber: "bill", Balance: 1000},
-    {AccountNumber: "ted", Balance: 10},
-    {AccountNumber: "sally", Balance: 1000},
-    {AccountNumber: "harry", Balance: 1000},
-    {AccountNumber: "jim", Balance: 1000},
-    {AccountNumber: "rich", Balance: 20000},
-    {AccountNumber: "Sender Account", Balance: 1000},
-    {AccountNumber: "Receiver Account", Balance: 1000},
-  },
+},
 }
 
 /* BankingService mocks interaction with a bank API. It supports withdrawals and deposits */
@@ -95,7 +94,7 @@ type BankingService struct {
  */
 func (client BankingService) Withdraw (accountNumber string, amount int, referenceID string) (string, error) {
 
-  acct, err := mockBank.findAccount(accountNumber)
+  acct, err := mockBank.findDbAccount(accountNumber)
 
   if err != nil {
     return "", &InvalidAccountError{}
@@ -110,11 +109,11 @@ func (client BankingService) Withdraw (accountNumber string, amount int, referen
  * Acceptsthe account number (string), amount (int), and a reference ID (string)
  * for idempotent transaction tracking.
  * Returns a transaction id when successful
- * Returns InvalidAccountError if the account is invalid 
+ * Returns InvalidAccountError if the account is invalid
  */
 func (client BankingService) Deposit (accountNumber string, amount int, referenceID string) (string, error) {
 
-  _, err := mockBank.findAccount(accountNumber)
+  _, err := mockBank.findDbAccount(accountNumber)
   if err != nil {
     return "", &InvalidAccountError{}
   }
@@ -148,3 +147,4 @@ func checkService() bool {
   }
   return bool(true)
 }
+

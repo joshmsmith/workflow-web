@@ -194,7 +194,7 @@ go run server.go
 ![app-newtransfer](./assets/NewTransfer.png)
 
 Note: Currently the account names need to match the list hardcoded in banking-client.go:61 mockBank var   
-WIP: to populate this from the db table..
+Update-20230608: Updated the banking-client to populate the account names from the mysql db accounts table instead of the hardcoded mockbank variable.
 
 ### Transfer Details (COMPLETED)
 
