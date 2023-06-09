@@ -22,7 +22,7 @@ type DbAccounts []DbAccount
 
 func ReadDbAccounts() DbAccounts {
 
-	log.Println("ReadAccounts: called")
+	//log.Println("ReadAccounts: called")
 
 	// Get database connection
 	dbc, _ := utils.GetDBConnection()

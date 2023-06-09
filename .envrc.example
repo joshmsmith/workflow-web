@@ -20,6 +20,9 @@ export DATACONVERTER_ENCRYPTION_KEY_ID=mysecretkey
 
 # App temporal taskqueue name
 export TRANSFER_MONEY_TASK_QUEUE="go-moneytransfer"
+# timer for transfer table to be checked (seconds)
+export CHECK_TRANSFER_TASKQUEUE_TIMER=30
+# simulate bank down on Deposit activity
 export BANK_SERVICE_AVAILABLE="true"
 
 # Set to enable debug logger logging
