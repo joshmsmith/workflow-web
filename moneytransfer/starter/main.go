@@ -41,9 +41,9 @@ func main() {
 
   // Sample workflow data
   pmnt := &mt.PaymentDetails {
-            SourceAccount: "Sender Account",
-            TargetAccount: "Receiver Account",
-            ReferenceID:   "fromGoStarter",
+            SourceAccount: "harry",
+            TargetAccount: "sally",
+            ReferenceID:   "from Go Starter",
             Amount:        100,
   }
   var delay int = 5 // delay between withdraw and deposit for demo purposes (seconds)
