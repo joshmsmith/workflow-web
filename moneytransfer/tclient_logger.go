@@ -26,18 +26,26 @@ func (l *TClientLogger) println(level, msg string, keyvals []interface{}) {
   if l.globalKeyvals == "" {
     l.logger.Println(append([]interface{}{level, msg}, keyvals...)...)
   } else {
-    l.logger.Println(append([]interface{}{level, msg, l.globalKeyvals}, keyvals...)...)
+    //l.logger.Println(append([]interface{}{level, msg, l.globalKeyvals}, keyvals...)...)
+    l.logger.Println(append([]interface{}{level, msg}, keyvals...)...)
   }
 }
 
 /* Debug writes message to the log. */
 func (l *TClientLogger) Debug(msg string, keyvals ...interface{}) {
-  l.println("DEBUG", msg, keyvals)
+  if log_level == "debug" {
+    l.println("DEBUG", msg, keyvals)
+  }
 }
 
 /* Info writes message to the log. */
 func (l *TClientLogger) Info(msg string, keyvals ...interface{}) {
   l.println("INFO ", msg, keyvals)
+}
+
+/* QInfo writes message to the log. */
+func (l *TClientLogger) QInfo(msg string, keyvals ...interface{}) {
+  l.println("", msg, keyvals)
 }
 
 /* Warn writes message to the log. */

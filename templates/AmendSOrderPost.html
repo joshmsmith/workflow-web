@@ -1,0 +1,20 @@
+<div class="container">
+  <h1 class="logo"><a tabindex="2" accesskey="1" href="/"><img src="/static/standing-orders.png" width=150
+        height=150 /></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Standing Order Payments</h1>
+
+{{ if .Success }}
+
+<br>
+<h3>Standing Order Amended!</h3>
+
+{{ else }}
+
+<h3>Standing Order not found!</h3>
+
+{{end}}
+
+<p><br>
+<a href="/listsorders"><button type="button" class="btn btn-primary btn-sm">List Standing Orders</button></a>
+</p>
+
+</div>

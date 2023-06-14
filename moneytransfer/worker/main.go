@@ -27,7 +27,8 @@ func main() {
   defer c.Close()
 
   log.Println("Go worker initialising..")
-  w := worker.New(c, mt.MoneyTransferTaskQueueName, worker.Options{})
+  taskqueuename := mt.MoneyTransferTaskQueueName
+  w := worker.New(c, taskqueuename, worker.Options{})
 
   // This worker hosts both Workflow and Activity functions.
   log.Println("Go worker registering for Workflow moneytransfer.Transfer..")
@@ -43,7 +44,7 @@ func main() {
   w.RegisterActivity(mt.Refund)
 
   // Start listening to the Task Queue.
-  log.Printf("%sGo worker listening on %s task queue..%s", mt.ColorGreen, mt.MoneyTransferTaskQueueName, mt.ColorReset)
+  log.Printf("%sGo worker listening on %s task queue..%s", mt.ColorGreen, taskqueuename, mt.ColorReset)
   err = w.Run(worker.InterruptCh())
   if err != nil {
     log.Fatalln("Unable to start MoneyTransfer Worker", err)

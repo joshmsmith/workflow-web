@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css">
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+
+    <title>Bootstrap test page</title>
+  </head>
+  <body>
+
+<div class="d-block px-3 py-2 text-center text-bold skippy">
+  <h1 class="display-1">Bootstrap Test Page</h1>
+</div>
+
+
+
+<hr><br>
+<div class="container">
+
+<div class="card col-6 offset-3" style="width: 50%;" align=center>
+  <img class="card-img-top" src="https://th.bing.com/th/id/OIP.XSZAFm-5JI7nriDLwZqRQQHaE7?pid=ImgDet&rs=1" alt="Card image" width="120" height="80">
+  <div class="card-body">
+    <h4 class="card-title">John Doe</h4>
+    <p class="card-text">Some example text.</p>
+    <a href="#" class="btn btn-primary">See Profile</a>
+  </div>
+</div>
+
+<hr><br>
+<div class="row g-0 bg-light position-relative">
+  <div class="col-md-4 mb-md-0 p-md-4">
+    <img src="https://cdn-icons-png.flaticon.com/512/6404/6404655.png" class="w-100" alt="bank" width="260">
+  </div>
+  <div class="col-md-4 p-2 ps-md-0">
+    <h5 class="mt-0">Columns with stretched link</h5>
+    <p>Another instance of placeholder content for this other custom component. It is intended to mimic what some real-world content would look like, and we're using it here to give the component a bit of body and size.</p>
+    <a href="#" class="stretched-link">Go somewhere</a>
+  </div>
+</div>
+
+<hr><br>
+<div class="row g-0 bg-light position-relative">
+  <div class="col-md-4 mb-md-0 p-md-4">
+    <img src="https://cdn-icons-png.flaticon.com/512/2721/2721031.png" class="w-100" alt="bank" width="260">
+  </div>
+  <div class="col-md-4 p-2 ps-md-0">
+    <h5 class="mt-0">Columns with stretched link</h5>
+    <p>Another instance of placeholder content for this other custom component. It is intended to mimic what some real-world content would look like, and we're using it here to give the component a bit of body and size.</p>
+    <a href="#" class="stretched-link">Go somewhere</a>
+  </div>
+</div>
+<hr><br>
+
+</div>
+
+<hr><br>
+<div class="container">
+<h3>Data passed to template:</h3>
+
+<div class="row">
+  <div class="col-md-1"><b>Id:</b></div>
+  <div class="col-md-2">{{ .Id }}</div>
+</div>
+<div class="row">
+  <div class="col-md-1"><b>Number:</b></div>
+  <div class="col-md-2">{{ .Number }}</div>
+</div>
+<div class="row">
+  <div class="col-md-1"><b>Name:</b></div>
+  <div class="col-md-2">{{ .Name }}</div>
+</div>
+<div class="row">
+  <div class="col-md-1"><b>Float:</b></div>
+  <div class="col-md-2">{{ .Float }}</div>
+</div>
+
+</div>
+
+<hr><br>
+<div class="container">
+<form class="form">
+
+  <div class="form-group">
+    <label for="inputName" class="col-md-2 col-form-label">Name:</label>
+    <input class="col-md-2" id="inputName" placeholder="Name">
+  </div>
+  <div class="form-group">
+    <label for="inputDesc" class="col-md-2 col-form-label">Description:</label>
+    <input class="col-md-4" id="inputDesc" placeholder="Description">
+  </div>
+
+  <br>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-6">
+      <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+    </div>
+  </div>
+
+</form>
+</div>
+
+<hr><br>
+<div class="container">
+
+<form class="form-horizontal">
+  <div class="form-group">
+    <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+    <div class="col-sm-4">
+      <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+    <div class="col-sm-4">
+      <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-4">
+      <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+    </div>
+  </div>
+</form>
+
+</div>
+
+<hr><br>
+<div class="container">
+<div class="grid text-left">
+  <div class="g-col-4">grid.g-col-4</div>
+  <div class="g-col-4">grid.g-col-4</div>
+  <div class="g-col-4">grid.g-col-4</div>
+</div>
+</div>
+
+<hr><br>
+<div class="container">
+<div class="row">
+  <div class="col-md-2">row1.col-md-2</div>
+  <div class="col-md-1">row1.col-md-1</div>
+  <div class="col-md-1">row1.col-md-1</div>
+  <div class="col-md-1">row1.col-md-1</div>
+  <div class="col-md-1">row1.col-md-1</div>
+</div>
+<div class="row">
+  <div class="col-md-8">row2.col-md-8</div>
+  <div class="col-md-4">row2.col-md-4</div>
+</div>
+<div class="row">
+  <div class="col-md-4">row3.col-md-4</div>
+  <div class="col-md-4">row3.col-md-4</div>
+  <div class="col-md-4">row3.col-md-4</div>
+</div>
+<div class="row">
+  <div class="col-md-6">row4.col-md-6</div>
+  <div class="col-md-6">row4.col-md-6</div>
+</div>
+<div>
+
+<hr><br>
+<!-- Stack the columns on mobile by making one full-width and the other half-width -->
+<div class="row">
+  <div class="col-xs-12 col-md-8">row1.col-xs-12 .col-md-8</div>
+  <div class="col-xs-6 col-md-4">row1.col-xs-6 .col-md-4</div>
+</div>
+<!-- Columns start at 50% wide on mobile and bump up to 33.3% wide on desktop -->
+<div class="row">
+  <div class="col-xs-6 col-md-4">row2.col-xs-6 .col-md-4</div>
+  <div class="col-xs-6 col-md-4">row2.col-xs-6 .col-md-4</div>
+  <div class="col-xs-6 col-md-4">row2.col-xs-6 .col-md-4</div>
+</div>
+
+<!-- Columns are always 50% wide, on mobile and desktop -->
+<div class="row">
+  <div class="col-xs-6">row3.col-xs-6</div>
+  <div class="col-xs-6">row3.col-xs-6</div>
+</div>
+
+<hr><br>
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">First</th>
+      <th scope="col">Last</th>
+      <th scope="col">Handle</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Mark</td>
+      <td>Otto</td>
+      <td>@mdo</td>
+      <td><button type="button" class="btn btn-primary btn-sm">Details</button></td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>Jacob</td>
+      <td>Thornton</td>
+      <td>@fat</td>
+      <td><button type="button" class="btn btn-primary btn-sm">Details</button></td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td colspan="2">Larry the Bird</td>
+      <td>@twitter</td>
+      <td><button type="button" class="btn btn-primary btn-sm">Details</button></td>
+    </tr>
+  </tbody>
+</table>
+
+<hr><br>
+
+<div class="container">
+<ul class="list-group w-40">
+  <span class="d-inline-flex align-items-center justify-content-center text-white rounded m-1 me-2" style="background-color: #0082ca; width: 40px; height: 40px;">
+    <li class="list-group-item active"><i align="center"></i>Items</li>
+    <li class="list-group-item"><i align="center"></i>Item 1</li>
+    <li class="list-group-item"><i align="center"></i>Item 2</li>
+    <li class="list-group-item"><i align="center"></i>Item 3</li>
+    <li class="list-group-item"><i align="center"></i>Item 4</li>
+  </span>
+</ul>
+</div>
+
+<hr><br>
+
+<div class="container">
+<ul class="list-group">
+    <div class="list-group-item">
+      <span class="d-inline-flex align-items-center justify-content-center text-white rounded m-1 me-2" style="background-color: #0082ca; width: 40px; height: 40px;">
+        <i></i>
+      </span>
+      Applications
+    </div>
+    <div class="list-group-item">
+      <div class="list-group-item" style="background-color: lightblue; width: 40px; height: 40px;">
+        <i align="center"><b>T</b></i>
+      </div>
+      Transfers
+    </div>
+    <div class="list-group-item">
+      <div class="list-group-item" style="background-color: #00b386; width: 40px; height: 40px;">
+        <i align=center><b>A</b></i>
+      </div>
+      Accounts
+    </div>
+</ul>
+</div>
+
+<hr><br>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Features</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Pricing</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#">Disabled</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+  </body>
+</html>
+

@@ -4,6 +4,8 @@ import (
 	"log"
 
 	"net/http"
+	"os"
+	"strconv"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -11,6 +13,8 @@ import (
 	"webapp/handlers"
 	"webapp/transferclient"
 )
+
+var CheckTransferTaskQueueTimer = os.Getenv("CHECK_TRANSFER_TASKQUEUE_TIMER")
 
 // Main
 func main() {
@@ -33,8 +37,18 @@ func main() {
 	router.HandleFunc("/resettransfer", handlers.ResetTransfer)
 	router.HandleFunc("/queryworkflow", handlers.QueryTransferWorkflow)
 
+	// standing order payment handlers
+	router.HandleFunc("/listsorders", handlers.ListSOrders)
+	router.HandleFunc("/newsorder", handlers.NewSOrder)
+	router.HandleFunc("/amendsorder", handlers.AmendSOrder)
+	router.HandleFunc("/cancelsorder", handlers.CancelSOrder)
+
 	// Start periodic background transfer table task
-	go transferclient.ExecuteCheckTransferTaskCronJob(30)
+	queryDelay, err := strconv.ParseUint(CheckTransferTaskQueueTimer, 20, 64)
+	if err != nil {
+		queryDelay = 20
+	}
+	go transferclient.ExecuteCheckTransferTaskCronJob(queryDelay)
 
 	// Serve
 	log.Print("Serve Http on 8085")

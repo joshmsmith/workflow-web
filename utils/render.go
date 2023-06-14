@@ -16,13 +16,13 @@ func Render(w http.ResponseWriter, filename string, data interface{}) {
   tmpl, err = template.ParseFiles(filename)
   if err != nil {
     log.Println("Render: Failed to ParseFiles for template:", filename, err)
-    http.Error(w, "Sorry, something went wrong parsing template", http.StatusInternalServerError)
+    http.Error(w, "<br><br><h3>Sorry, something went wrong parsing template</h3>", http.StatusInternalServerError)
     return
   }
 
   if err := tmpl.Execute(w, data); err != nil {
     log.Print(err)
-    http.Error(w, "Sorry, something went wrong executing template", http.StatusInternalServerError)
+    http.Error(w, "<br><br><h3>Sorry, something went wrong executing template</h3>", http.StatusInternalServerError)
   }
 
   tmpl, err = template.ParseFiles("templates/Footer.html")

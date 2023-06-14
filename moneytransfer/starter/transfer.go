@@ -6,13 +6,11 @@ import (
   "fmt"
   "log"
   "math/rand"
-  "time"
 
   "go.temporal.io/sdk/client"
 
   mt "webapp/moneytransfer"
 )
-
 
 /* Main */
 func main() {
@@ -32,19 +30,19 @@ func main() {
   defer c.Close()
 
   // Temporal Client Start Workflow Options
-  workflowID := fmt.Sprintf("go-moneytxfr-wkfl-%s", genRandString(5))
+  workflowID := fmt.Sprintf("go-moneytxfr-wkfl-%d", rand.Intn(99999))
 
-  workflowOptions := client.StartWorkflowOptions {
-                       ID:        workflowID,
-                       TaskQueue: mt.MoneyTransferTaskQueueName,
+  workflowOptions := client.StartWorkflowOptions{
+    ID:        workflowID,
+    TaskQueue: mt.MoneyTransferTaskQueueName,
   }
 
   // Sample workflow data
-  pmnt := &mt.PaymentDetails {
-            SourceAccount: "harry",
-            TargetAccount: "sally",
-            ReferenceID:   "from Go Starter",
-            Amount:        100,
+  pmnt := &mt.PaymentDetails{
+    SourceAccount: "harry",
+    TargetAccount: "sally",
+    ReferenceID:   "from Go Starter",
+    Amount:        100,
   }
   var delay int = 5 // delay between withdraw and deposit for demo purposes (seconds)
 
@@ -74,15 +72,6 @@ func main() {
   log.Printf("%sWorkflow result:%s %s", mt.ColorYellow, mt.ColorReset, string(data))
 
   // done
-  log.Print("Start workflow client done.");
-}
-
-
-/* genRandString */
-func genRandString (length int) string {
-  rand.Seed(time.Now().UnixNano())
-  b := make([]byte, length+2)
-  rand.Read(b)
-  return fmt.Sprintf("%x", b)[2 : length+2]
+  log.Print("Start workflow client done.")
 }
 

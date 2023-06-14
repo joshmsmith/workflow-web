@@ -1,0 +1,37 @@
+<div class="container">
+  <h1 class="logo"><a tabindex="2" accesskey="1" href="/"><img src="/static/standing-orders.png" width=150
+        height=150 /></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Standing Order Payments</h1>
+
+  <br>
+  <h3>Active Standing Orders:</h3>
+
+<br>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <td>WorkflowID</td>
+      <td>Origin Account</td>
+      <td>Destination Account</td>
+      <td>Amount</td>
+      <td>Reference</td>
+      <td></td>
+    </tr>
+  </thead>
+  <tbody>
+{{ range . }}
+    <tr>
+      <td>{{ .WorkflowID }}</td>
+      <td>{{ .PaymentOrigin }}</td>
+      <td>{{ .PaymentDestination }}</td>
+      <td>{{ .PaymentAmount }}</td>
+      <td>{{ .PaymentReference }}</td>
+      <td><a href="/amendsorder?id={{ .WorkflowID }}"><button type="button" class="btn btn-primary btn-sm">Amend</button></a></td>
+    </tr>
+{{ end }}
+  </tbody>
+</table>
+
+<p>
+<form action="/newsorder"><input type="submit" class="btn btn-primary btn-sm" value="Create New" /></form>
+
+</div>

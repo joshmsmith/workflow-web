@@ -6,7 +6,6 @@ import (
   "fmt"
   "log"
   "math/rand"
-  "time"
 
   "go.temporal.io/sdk/client"
 )
@@ -14,19 +13,19 @@ import (
 /*
  * StartMoneyTransfer - App entry point to run Temporal Workflows
  */
-func StartMoneyTransfer (pmnt *PaymentDetails) (wfinfo *WorkflowInfo, starterr error) {
+func StartMoneyTransfer(pmnt *PaymentDetails) (wfinfo *WorkflowInfo, starterr error) {
 
-  thisid := genRandString(5)
+  thisid := fmt.Sprint(rand.Intn(99999))
   log.Printf("StartMoneyTransfer-%s: called, PaymentDetails: %#v", thisid, *pmnt)
 
   // Initialise return object
   wfinfo = &WorkflowInfo{
-		Id:         0,
-		WorkflowID: fmt.Sprintf("go-txfr-webtask-wkfl-%s", thisid),
-		RunID:      "",
-		TaskQueue:  MoneyTransferTaskQueueName,
-		Info:       "",
-		Status:     "ERROR",
+    Id:         0,
+    WorkflowID: fmt.Sprintf("go-txfr-webtask-wkfl-%s", thisid),
+    RunID:      "",
+    TaskQueue:  MoneyTransferTaskQueueName,
+    Info:       "",
+    Status:     "ERROR",
   }
 
   // Load the Temporal Cloud from env
@@ -48,11 +47,11 @@ func StartMoneyTransfer (pmnt *PaymentDetails) (wfinfo *WorkflowInfo, starterr e
   workflowID := fmt.Sprintf("go-txfr-webtask-wkfl-%s", thisid)
 
   workflowOptions := client.StartWorkflowOptions{
-		ID:        workflowID,
-		TaskQueue: MoneyTransferTaskQueueName,
+    ID:        workflowID,
+    TaskQueue: MoneyTransferTaskQueueName,
   }
 
-  var delay int = 20 // delay between withdraw and deposit for demo purposes (seconds)
+  var delay int = 10 // delay between withdraw and deposit for demo purposes (seconds)
 
   // ExecuteWorkflow moneytransfer.Transfer
   log.Printf("StartMoneyTransfer-%s: Starting moneytransfer workflow on %s task queue", thisid, MoneyTransferTaskQueueName)
@@ -67,7 +66,7 @@ func StartMoneyTransfer (pmnt *PaymentDetails) (wfinfo *WorkflowInfo, starterr e
   wfinfo.WorkflowID = we.GetID()
   wfinfo.RunID = we.GetRunID()
   log.Printf("StartMoneyTransfer-%s: %sStarted workflow: WorkflowID: %s, RunID: %s%s",
-		thisid, ColorYellow, wfinfo.WorkflowID, wfinfo.RunID, ColorReset)
+    thisid, ColorYellow, wfinfo.WorkflowID, wfinfo.RunID, ColorReset)
 
   // Check workflow status
   var result string
@@ -96,13 +95,7 @@ func StartMoneyTransfer (pmnt *PaymentDetails) (wfinfo *WorkflowInfo, starterr e
   return wfinfo, err
 }
 
-func genRandString(length int) string {
-  rand.Seed(time.Now().UnixNano())
-  b := make([]byte, length+2)
-  rand.Read(b)
-  return fmt.Sprintf("%x", b)[2 : length+2]
-}
-
+/* trimQuotes from string */
 func trimQuotes(s string) string {
   if len(s) >= 2 {
     if s[0] == '"' && s[len(s)-1] == '"' {
@@ -111,4 +104,3 @@ func trimQuotes(s string) string {
   }
   return s
 }
-

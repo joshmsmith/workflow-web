@@ -1,0 +1,50 @@
+<div class="container">
+  <h1 class="logo"><a tabindex="2" accesskey="1" href="/"><img src="/static/standing-orders.png" width=150
+        height=150 /></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Standing Order Payments</h1>
+
+<br>
+<h3>Amend Standing Order:</h3>
+<br>
+
+
+<form class="form-horizontal" action="/amendsorder" method="POST">
+
+  <div class="form-group">
+    <label for="wkflid" class="col-sm-3 control-label">Workflow ID:</label>
+    <input type="text" class="col-sm-3" name="wkflid" size="30" value="{{ .WorkflowID }}" readonly>
+  </div>
+  <div class="form-group">
+    <label for="origin" class="col-sm-3 control-label">Origin Account Name:</label>
+    <input type="text" class="col-sm-3" name="orgin" size="30" value="{{ .PaymentOrigin }}" readonly>
+  </div>
+  <div class="form-group">
+    <label for="destination" class="col-sm-3 control-label">Destination Account Name:</label>
+    <input type="text" class="col-sm-3" name="destination" size="30" value="{{ .PaymentDestination }}" readonly>
+  </div>
+  <div class="form-group">
+    <label for="amount" class="col-sm-3 control-label">Amount:</label>
+    <input type="text" class="col-sm-1" name="amount" size="5" placeholder="{{ .PaymentAmount }}">
+  </div>
+  <div class="form-group">
+    <label for="reference" class="col-sm-3 control-label">Reference:</label>
+    <input type="text" class="col-sm-3" name="reference" size="30" placeholder="{{ .PaymentReference }}">
+  </div>
+    <div class="form-group">
+    <label for="period" class="col-sm-3 control-label">Payment Period (seconds):</label>
+    <input type="text" class="col-sm-3" name="period" size="5" placeholder="{{ .SchedulePeriodDuration }}">
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-4">
+      <button type="submit" class="btn btn-primary btn-sm">Amend</button>
+    </div>
+  </div>
+</form>
+
+<p><br><br>
+<div align=right>
+  <a href="/listsorders"><button type="button" class="btn btn-primary btn-sm">List Standing Orders</button></a>
+  <a href="/cancelsorder?id={{ .WorkflowID }}"><button type="button" class="btn btn-primary btn-sm">Cancel Standing Order</button></a>
+</div>
+
+</div>

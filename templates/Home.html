@@ -1,35 +1,58 @@
 <div class="container">
-  <h1 class="logo"><a tabindex="2" accesskey="1" href="/"><img src="/static/temporal-white.png" width="70" height="65" /></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Workflow WebApp</h1>
+  <h1 class="logo"><a tabindex="2" accesskey="1" href="/"><img src="/static/temporal-white.png" width="70"
+        height="65" /></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Workflow WebApp</h1>
 
-<p>
-<hr>
-<div class="row g-0 bg-light position-relative">
-  <div class="col-md-3 mb-md-0 p-md-4">
-    <img src="https://cdn-icons-png.flaticon.com/512/6404/6404655.png" class="w-100" alt="transfer">
+  <p>
+  <hr>
+  <div class="row g-0 bg-light position-relative">
+    <div class="col-md-3 mb-md-0 p-md-4">
+      <img src="/static/money-transfer-header.png" class="w-100" alt="transfer">
+    </div>
+    <div class="col-md-8 p-8 ps-md-0"><br>
+      <h4 class="mt-0">Money Transfer Demo</h4>
+      <p>Sample Go web app with a mysql database table acting as a task queue feeding money transfer requests that are
+        processed using Temporal Workflow and Activities.<br><br>
+        A background thread polls the local request table and submits a new Temporal Workflow as required, the resultant
+        workflow and run ids are updated in the local table as well as the end return result of the workflow.<br><br>
+        <a href="/static/demo-architecture.png">Demo Architecture Diagram</a>
+      </p>
+      <h3><a href="/transfers"><button type="button" class="btn btn-primary btn-sm">Launch</button></a></h3>
+    </div>
   </div>
-  <div class="col-md-8 p-6 ps-md-0"><br>
-    <h4 class="mt-0">Money Transfer Demo</h4>
-    <p>Sample Go web app with a mysql database table acting as a task queue feeding money transfer requests that are processed using Temporal Workflow and Activities.<br><br>
-       A background thread polls the local request table and submits a new Temporal Workflow as required, the resultant workflow and run ids are updated in the local table as well as the end return result of the workflow.<br><br>
-       <a href="/static/demo-architecture.png">Demo Architecture Diagram</a>
-    </p>
-    <h3><a href="/transfers"><button type="button" class="btn btn-primary btn-sm">Launch</button></a></h3>
+
+  <hr>
+  <div class="row g-0 bg-light position-relative">
+    <div class="col-md-3 mb-md-0 p-md-4">
+      <img src="/static/bank-accounts-header.png" class="w-100" alt="accounts">
+    </div>
+    <div class="col-md-8 p-4 ps-md-0"><br>
+      <h4 class="mt-0">Local Account Managment</h4>
+      <p>Golang CRUD app managing a mysql database table of user account entries with a balance column.<br><br>
+        These account names and balances are used in the Transfers mock-bank demo.</p>
+      <h3><a href="/accounts"><button type="button" class="btn btn-primary btn-sm">Launch</button></a></h3>
+    </div>
   </div>
+
+  <hr>
+  <div class="row g-0 bg-light position-relative">
+    <div class="col-md-3 mb-md-0 p-md-3">
+      <img src="/static/standing-order-header.png" class="w-100" alt="standingorders">
+    </div>
+    <div class="col-md-8 p-6 ps-md-0"><br>
+      <h4 class="mt-0">Standing Orders</h4>
+      <p>Standing Order example showing regular payments using extra Temporal Go SDK functionality.<br>
+        Active Standing Orders are not held in the local app database, a custom search attribute is used in the workflow
+        and
+        the active orders are queried directly from the Temporal Cloud server. S/O details are fetched using Temporal
+        workflow queries.<br>
+        A Standing order can be Amended and Cancelled which is implemented by sending Temporal Signals to the
+        workflow.<br><br>
+        <a href="/static/sorders-demo-architecture.png">Demo Architecture Diagram</a>&nbsp;&nbsp;&nbsp;
+        <a href="/static/sorders-detailed-architecture.jpeg">Detailed Diagram</a>
+      </p>
+      <h3><a href="/listsorders"><button type="button" class="btn btn-primary btn-sm">Launch</button></a></h3>
+    </div>
+  </div>
+
+  <hr>
 </div>
-
-<hr>
-<div class="row g-0 bg-light position-relative">
-  <div class="col-md-3 mb-md-0 p-md-4">
-    <img src="https://cdn-icons-png.flaticon.com/512/2721/2721031.png" class="w-100" alt="accounts">
-  </div>
-  <div class="col-md-8 p-4 ps-md-0"><br>
-    <h4 class="mt-0">Local Account Managment</h4>
-    <p>Golang CRUD app managing a mysql database table of user account entries with a balance column.<br><br>
-       These account names and balances are used in the Transfers mock-bank demo.</p>
-    <h3><a href="/accounts"><button type="button" class="btn btn-primary btn-sm">Launch</button></a></h3>
-  </div>
-</div>
-<hr>
-
-</div>
-
