@@ -44,7 +44,7 @@ func main() {
 	router.HandleFunc("/cancelsorder", handlers.CancelSOrder)
 
 	// Start periodic background transfer table task
-	queryDelay, err := strconv.ParseUint(CheckTransferTaskQueueTimer, 20, 64)
+	queryDelay, err := strconv.ParseUint(CheckTransferTaskQueueTimer, 10, 64)
 	if err != nil {
 		queryDelay = 20
 	}

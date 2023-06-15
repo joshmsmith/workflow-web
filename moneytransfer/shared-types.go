@@ -7,7 +7,9 @@ import (
 )
 
 var MoneyTransferTaskQueueName = os.Getenv("TRANSFER_MONEY_TASK_QUEUE")
-var StandingOrdersTaskQueueName = "StandingOrders"
+var StandingOrdersTaskQueueName = os.Getenv("STANDING_ORDERS_TASK_QUEUE")
+var DelayTimerBetweenWithdrawDeposit = os.Getenv("DELAY_TIMER_BETWEEN_WITHDRAW_DEPOSIT")
+
 var log_level = strings.ToLower(os.Getenv("LOG_LEVEL"))
 
 type PaymentDetails struct {
