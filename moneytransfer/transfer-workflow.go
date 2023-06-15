@@ -2,7 +2,6 @@ package moneytransfer
 
 import (
 	"fmt"
-	"log"
 	"time"
 
 	"go.temporal.io/sdk/temporal"
@@ -12,11 +11,9 @@ import (
 /* Transfer Workflow */
 func Transfer(ctx workflow.Context, input PaymentDetails, delay int) (string, error) {
 
-	log.Printf("%sTransfer-Workflow:%s Started", ColorGreen, ColorReset)
-
-	// Define workflow logger (avoid repeating messages)
+	// Define workflow logger (avoid repeating messages on replay etc)
 	logger := workflow.GetLogger(ctx)
-	logger.Info("Workflow Logger: Transfer Workflow: Invoked -")
+	logger.Info(ColorGreen, "Transfer-Workflow:", ColorReset, "Started")
 
 	// RetryPolicy specifies how to automatically handle retries if an Activity fails.
 	retrypolicy := &temporal.RetryPolicy{
@@ -49,13 +46,13 @@ func Transfer(ctx workflow.Context, input PaymentDetails, delay int) (string, er
 	if withdrawErr != nil {
 		// Set search attribute status to FAILED
 		_ = UpcertSearchAttribute(ctx, "CustomStringField", "FAILED")
-		log.Printf("%sTransfer-Workflow:%s Complete. %s(Withdraw Failed)%s", ColorGreen, ColorReset, ColorRed, ColorReset)
+		logger.Info(ColorGreen, "Transfer-Workflow:", ColorReset, "Complete.", ColorRed, "(Withdraw Failed)", ColorReset)
 		return "", fmt.Errorf("Withdraw: failed to withdraw funds from: %v, %w", input.SourceAccount, withdrawErr)
 	}
 
 	// For demo - sleep between activities
-	logger.Debug("Workflow Logger: Transfer Workflow: Sleeping between activity calls -")
-	log.Printf("%sTransfer-Workflow:%s workflow.Sleep duration %d seconds%s", ColorGreen, ColorBlue, delay, ColorReset)
+	logger.Debug("Transfer-Workflow: (DEBUG) Sleeping between activity calls -")
+	logger.Info(ColorGreen, "Transfer-Workflow:", ColorBlue, "workflow.Sleep duration", delay, "seconds", ColorReset)
 	workflow.Sleep(ctx, time.Duration(delay)*time.Second)
 
 	/* Deposit money Activity - (blocks until completion with .Get function) */
@@ -74,12 +71,12 @@ func Transfer(ctx workflow.Context, input PaymentDetails, delay int) (string, er
 		refundErr := workflow.ExecuteActivity(ctx, Refund, input).Get(ctx, &result)
 
 		if refundErr != nil {
-			log.Printf("%sTransfer-Workflow:%s Complete. %s(Deposit & Refund Failed)%s", ColorGreen, ColorReset, ColorRed, ColorReset)
+			logger.Info(ColorGreen, "Transfer-Workflow:", ColorReset, "Complete.", ColorRed, "(Deposit & Refund Failed)", ColorReset)
 			return "", fmt.Errorf("Refund: failed to Deposit funds to: %v, %w. Money could NOT be returned to %v: %w",
 				input.TargetAccount, depositErr, input.SourceAccount, refundErr)
 		}
 
-		log.Printf("%sTransfer-Workflow:%s Complete. %s(Deposit Failed)%s", ColorGreen, ColorReset, ColorRed, ColorReset)
+		logger.Info(ColorGreen, "Transfer-Workflow:", ColorReset, "Complete.", ColorRed, "(Deposit Failed)", ColorReset)
 		return "", fmt.Errorf("Deposit: failed to deposit funds to: %v, Funds returned to: %v, %w",
 			input.TargetAccount, input.SourceAccount, depositErr)
 	}
@@ -90,8 +87,7 @@ func Transfer(ctx workflow.Context, input PaymentDetails, delay int) (string, er
 	// Set search attribute status to COMPLETED
 	_ = UpcertSearchAttribute(ctx, "CustomStringField", "COMPLETED")
 
-	logger.Info("Workflow Logger: Transfer Workflow: Complete -")
-	log.Printf("%sTransfer-Workflow:%s Complete.", ColorGreen, ColorReset)
+	logger.Info(ColorGreen, "Transfer-Workflow:", ColorReset, "Complete.")
 
 	return result, nil
 }

@@ -51,7 +51,7 @@ func StartMoneyTransfer(pmnt *PaymentDetails) (wfinfo *WorkflowInfo, starterr er
     TaskQueue: MoneyTransferTaskQueueName,
   }
 
-  var delay int = 10 // delay between withdraw and deposit for demo purposes (seconds)
+  var delay int = 15 // delay between withdraw and deposit for demo purposes (seconds)
 
   // ExecuteWorkflow moneytransfer.Transfer
   log.Printf("StartMoneyTransfer-%s: Starting moneytransfer workflow on %s task queue", thisid, MoneyTransferTaskQueueName)
