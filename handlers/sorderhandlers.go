@@ -37,7 +37,7 @@ func ListSOrders(w http.ResponseWriter, r *http.Request) {
 
 	namespace := os.Getenv("TEMPORAL_NAMESPACE")
 
-	clientOptions, err := mt.LoadClientOption()
+	clientOptions, err := utils.LoadClientOption()
 	if err != nil {
 		log.Fatalf("ListSOrders: Failed to load Temporal Cloud environment: %v", err)
 	}
@@ -176,7 +176,7 @@ func NewSOrder(w http.ResponseWriter, r *http.Request) {
 	log.Println("NewSOrder: Submitting Temporal Workflow:", wkflowid)
 
 	// Load the Temporal Cloud from env
-	clientOptions, err := mt.LoadClientOption()
+	clientOptions, err := utils.LoadClientOption()
 	if err != nil {
 		log.Fatalf("NewSOrder: Failed to load Temporal Cloud environment: %v", err)
 	}
@@ -222,7 +222,7 @@ func AmendSOrder(w http.ResponseWriter, r *http.Request) {
 	log.Println("AmendSOrder: method:", r.Method) //get request method
 
 	// Load the Temporal Cloud from env
-	clientOptions, err := mt.LoadClientOption()
+	clientOptions, err := utils.LoadClientOption()
 	if err != nil {
 		log.Fatalf("AmendSOrder: Failed to load Temporal Cloud environment: %v", err)
 	}
@@ -372,7 +372,7 @@ func CancelSOrder(w http.ResponseWriter, r *http.Request) {
 	log.Println("CancelSOrder: Cancelling Standing Order:", wkflId)
 
 	// Load the Temporal Cloud from env
-	clientOptions, err := mt.LoadClientOption()
+	clientOptions, err := utils.LoadClientOption()
 	if err != nil {
 		log.Fatalf("CancelSOrder: Failed to load Temporal Cloud environment: %v", err)
 	}

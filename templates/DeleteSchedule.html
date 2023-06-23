@@ -1,0 +1,20 @@
+<div class="container">
+  <h1 class="logo-small">
+    <a tabindex="2" accesskey="1" href="/"><img width=150 height=150 src="/static/calendar-icon.png" /></a>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Schedules
+  </h1>
+
+  {{ if .Success }}
+
+  <br>
+  <h3>Schedule deleted!</h3>
+
+  {{ else }}
+
+  <br>
+  <h3>Schedule entry not found!</h3>
+
+  {{end}}
+
+  <br><br><a href="/schedules"><button type="button" class="btn btn-primary btn-sm">List Schedules</button></a>
+</div>

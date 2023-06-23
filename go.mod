@@ -7,6 +7,7 @@ require (
 	github.com/gogo/protobuf v1.3.2
 	github.com/gorilla/mux v1.8.0
 	github.com/jasonlvhit/gocron v0.0.1
+	github.com/xhit/go-simple-mail/v2 v2.13.0
 	go.temporal.io/api v1.19.1-0.20230322213042-07fb271d475b
 	go.temporal.io/sdk v1.22.1
 )
@@ -14,6 +15,7 @@ require (
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a // indirect
+	github.com/go-test/deep v1.1.0 // indirect
 	github.com/gogo/googleapis v1.4.1 // indirect
 	github.com/gogo/status v1.1.1 // indirect
 	github.com/golang/mock v1.6.0 // indirect
@@ -25,6 +27,7 @@ require (
 	github.com/robfig/cron v1.2.0 // indirect
 	github.com/stretchr/objx v0.5.0 // indirect
 	github.com/stretchr/testify v1.8.2 // indirect
+	github.com/toorop/go-dkim v0.0.0-20201103131630-e1cd1a0a5208 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
 	golang.org/x/net v0.8.0 // indirect
 	golang.org/x/sys v0.6.0 // indirect

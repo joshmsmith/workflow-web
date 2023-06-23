@@ -11,14 +11,14 @@ import (
 	commonpb "go.temporal.io/api/common/v1"
 	"go.temporal.io/api/workflowservice/v1"
 
-	mt "webapp/moneytransfer"
+	"webapp/utils"
 )
 
 func main() {
 
 	namespace := os.Getenv("TEMPORAL_NAMESPACE")
 
-	clientOptions, err := mt.LoadClientOption()
+	clientOptions, err := utils.LoadClientOption()
 	if err != nil {
 		log.Fatalf("Failed to load Temporal Cloud environment: %v", err)
 	}

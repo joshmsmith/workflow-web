@@ -3,6 +3,7 @@ package moneytransfer
 import (
 	"fmt"
 	"time"
+	"webapp/utils"
 
 	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
@@ -36,7 +37,7 @@ func Transfer(ctx workflow.Context, input PaymentDetails, delay int) (string, er
 	ctx = workflow.WithActivityOptions(ctx, options)
 
 	// Set search attribute status to PROCESSING
-	_ = UpcertSearchAttribute(ctx, "CustomStringField", "PROCESSING")
+	_ = utils.UpcertSearchAttribute(ctx, "CustomStringField", "PROCESSING")
 
 	/* Withdraw money Activity - (blocks until completion with .Get function) */
 	var withdrawOutput string
@@ -45,7 +46,7 @@ func Transfer(ctx workflow.Context, input PaymentDetails, delay int) (string, er
 
 	if withdrawErr != nil {
 		// Set search attribute status to FAILED
-		_ = UpcertSearchAttribute(ctx, "CustomStringField", "FAILED")
+		_ = utils.UpcertSearchAttribute(ctx, "CustomStringField", "FAILED")
 		logger.Info(ColorGreen, "Transfer-Workflow:", ColorReset, "Complete.", ColorRed, "(Withdraw Failed)", ColorReset)
 		return "", fmt.Errorf("Withdraw: failed to withdraw funds from: %v, %w", input.SourceAccount, withdrawErr)
 	}
@@ -64,7 +65,7 @@ func Transfer(ctx workflow.Context, input PaymentDetails, delay int) (string, er
 		// The deposit failed; put money back in original account.
 
 		// Set search attribute status to FAILED
-		_ = UpcertSearchAttribute(ctx, "CustomStringField", "FAILED")
+		_ = utils.UpcertSearchAttribute(ctx, "CustomStringField", "FAILED")
 
 		/* Refund money Activity */
 		var result string
@@ -85,7 +86,7 @@ func Transfer(ctx workflow.Context, input PaymentDetails, delay int) (string, er
 	result := fmt.Sprintf("Transfer complete (transaction IDs: Withdraw: %s, Deposit: %s)", withdrawOutput, depositOutput)
 
 	// Set search attribute status to COMPLETED
-	_ = UpcertSearchAttribute(ctx, "CustomStringField", "COMPLETED")
+	_ = utils.UpcertSearchAttribute(ctx, "CustomStringField", "COMPLETED")
 
 	logger.Info(ColorGreen, "Transfer-Workflow:", ColorReset, "Complete.")
 

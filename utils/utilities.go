@@ -1,4 +1,4 @@
-package moneytransfer
+package utils
 
 import (
 	"crypto/tls"

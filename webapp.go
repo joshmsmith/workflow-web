@@ -43,6 +43,14 @@ func main() {
 	router.HandleFunc("/amendsorder", handlers.AmendSOrder)
 	router.HandleFunc("/cancelsorder", handlers.CancelSOrder)
 
+  // schedule handlers
+  router.HandleFunc("/newschedule", handlers.NewSchedule)
+  router.HandleFunc("/schedules", handlers.ListSchedules)
+  router.HandleFunc("/showschedule", handlers.ShowSchedule)
+  router.HandleFunc("/updateschedule", handlers.UpdateSchedule)
+  router.HandleFunc("/deleteschedule", handlers.DeleteSchedule)
+
+
 	// Start periodic background transfer table task
 	queryDelay, err := strconv.ParseUint(CheckTransferTaskQueueTimer, 10, 64)
 	if err != nil {

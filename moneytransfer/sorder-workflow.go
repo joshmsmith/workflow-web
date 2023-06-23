@@ -6,6 +6,8 @@ import (
 	"time"
 
 	"go.temporal.io/sdk/workflow"
+
+	"webapp/utils"
 )
 
 func StandingOrderWorkflow(ctx workflow.Context, pdetails PaymentDetails, pschedule PaymentSchedule) (string, error) {
@@ -20,7 +22,7 @@ func StandingOrderWorkflow(ctx workflow.Context, pdetails PaymentDetails, psched
 	}
 
 	// upcert StandingOrder as ACTIVE
-	_ = UpcertSearchAttribute(ctx, "CustomStringField", "ACTIVE-SORDER")
+	_ = utils.UpcertSearchAttribute(ctx, "CustomStringField", "ACTIVE-SORDER")
 
 	// Define query handlers for variables
 	//
@@ -173,7 +175,7 @@ func StandingOrderWorkflow(ctx workflow.Context, pdetails PaymentDetails, psched
 		}
 		if !sorder.Schedule.Active {
 			logger.Info(ColorGreen, "S/O-Workflow:", ColorReset, "Was Cancelled.")
-			_ = UpcertSearchAttribute(ctx, "CustomStringField", "CANCELLED-SORDER")
+			_ = utils.UpcertSearchAttribute(ctx, "CustomStringField", "CANCELLED-SORDER")
 
 		} else if amended {
 			logger.Info(ColorGreen, "S/O-Workflow:", ColorReset, "Standing Order has been amended:", sorder.Details)
@@ -209,7 +211,7 @@ func StandingOrderWorkflow(ctx workflow.Context, pdetails PaymentDetails, psched
 				logger.Error(ColorGreen, "S/O-Workflow:", ColorRed, "Child workflow Transfer failed!", ColorReset, err)
 				// do some failed sorder Activity.. email notification etc..
 				sorder.Schedule.Active = false
-				_ = UpcertSearchAttribute(ctx, "CustomStringField", "FAILED-SORDER")
+				_ = utils.UpcertSearchAttribute(ctx, "CustomStringField", "FAILED-SORDER")
 
 				// ToDo: Call a sorder notification activity here..
 				logger.Info(ColorGreen, "S/O-Workflow:", ColorRed, "Scheduled payment:", sorder.Details, "Completed with Error,", ColorReset, err)

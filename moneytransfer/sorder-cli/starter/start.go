@@ -10,6 +10,7 @@ import (
 	"go.temporal.io/sdk/client"
 
 	mt "webapp/moneytransfer"
+  "webapp/utils"
 )
 
 func main() {
@@ -17,7 +18,7 @@ func main() {
 	log.Println("workflow start program..")
 
 	// Load the Temporal Cloud from env
-	clientOptions, err := mt.LoadClientOption()
+	clientOptions, err := utils.LoadClientOption()
 	if err != nil {
 		log.Fatalf("Failed to load Temporal Cloud environment: %v", err)
 	}

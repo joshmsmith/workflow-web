@@ -7,6 +7,7 @@ import (
 	"log"
 	"math/rand"
 	"strconv"
+	"webapp/utils"
 
 	"go.temporal.io/sdk/client"
 )
@@ -30,7 +31,7 @@ func StartMoneyTransfer(pmnt *PaymentDetails) (wfinfo *WorkflowInfo, starterr er
 	}
 
 	// Load the Temporal Cloud from env
-	clientOptions, err := LoadClientOption()
+	clientOptions, err := utils.LoadClientOption()
 	if err != nil {
 		log.Printf("StartMoneyTransfer-%s: Failed to load Temporal Cloud environment: %v", thisid, err)
 		wfinfo.Info = err.Error()
