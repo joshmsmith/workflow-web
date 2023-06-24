@@ -24,7 +24,8 @@ var EmailNotificationStageCompleteSubject string = "Schedule Workflow Completed"
 var emailFromAddress string = "noreply@webapp.domain"
 
 // localhost mailserver (mailhog alias to localhost)
-var SMTPHost string = "mailhog"
+//var SMTPHost string = "mailhog"
+var SMTPHost string = "localhost"
 var SMTPPort int = 1025
 
 // Terminal Colours
