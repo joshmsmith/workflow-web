@@ -17,6 +17,7 @@ import (
 	"go.temporal.io/sdk/client"
 
 	mt "webapp/moneytransfer"
+	so "webapp/standingorder"
 	"webapp/utils"
 )
 
@@ -77,55 +78,55 @@ func ListSOrders(w http.ResponseWriter, r *http.Request) {
 			// Query variables form workflow
 			resp, err := c.QueryWorkflow(context.Background(), sorder.WorkflowID, "", "payment.origin")
 			if err != nil {
-				log.Fatalln("ListSOrders: Unable to query workflow", err)
+				log.Fatalln("ListSOrders: Unable to query workflow,", err)
 			} else {
 				var result interface{}
 				if err := resp.Get(&result); err != nil {
-					log.Fatalln("ListSOrders: Unable to decode query result", err)
+					log.Fatalln("ListSOrders: Unable to decode query result,", err)
 				} else {
 					sorder.PaymentOrigin = fmt.Sprintf("%v", result)
 				}
 			}
 			resp, err = c.QueryWorkflow(context.Background(), sorder.WorkflowID, "", "payment.destination")
 			if err != nil {
-				log.Fatalln("ListSOrders: Unable to query workflow", err)
+				log.Fatalln("ListSOrders: Unable to query workflow,", err)
 			} else {
 				var result interface{}
 				if err := resp.Get(&result); err != nil {
-					log.Fatalln("ListSOrders: Unable to decode query result", err)
+					log.Fatalln("ListSOrders: Unable to decode query result,", err)
 				} else {
 					sorder.PaymentDestination = fmt.Sprintf("%v", result)
 				}
 			}
 			resp, err = c.QueryWorkflow(context.Background(), sorder.WorkflowID, "", "payment.amount")
 			if err != nil {
-				log.Fatalln("ListSOrders: Unable to query workflow", err)
+				log.Fatalln("ListSOrders: Unable to query workflow,", err)
 			} else {
 				var result interface{}
 				if err := resp.Get(&result); err != nil {
-					log.Fatalln("ListSOrders: Unable to decode query result", err)
+					log.Fatalln("ListSOrders: Unable to decode query result,", err)
 				} else {
 					sorder.PaymentAmount, _ = strconv.Atoi(fmt.Sprintf("%v", result))
 				}
 			}
 			resp, err = c.QueryWorkflow(context.Background(), sorder.WorkflowID, "", "payment.reference")
 			if err != nil {
-				log.Fatalln("ListSOrders: Unable to query workflow", err)
+				log.Fatalln("ListSOrders: Unable to query workflow,", err)
 			} else {
 				var result interface{}
 				if err := resp.Get(&result); err != nil {
-					log.Fatalln("ListSOrders: Unable to decode query result", err)
+					log.Fatalln("ListSOrders: Unable to decode query result,", err)
 				} else {
 					sorder.PaymentReference = fmt.Sprintf("%v", result)
 				}
 			}
 			resp, err = c.QueryWorkflow(context.Background(), sorder.WorkflowID, "", "schedule.periodduration")
 			if err != nil {
-				log.Fatalln("ListSOrders: Unable to query workflow", err)
+				log.Fatalln("ListSOrders: Unable to query workflow,", err)
 			} else {
 				var result interface{}
 				if err := resp.Get(&result); err != nil {
-					log.Fatalln("ListSOrders: Unable to decode query result", err)
+					log.Fatalln("ListSOrders: Unable to decode query result,", err)
 				} else {
 					d, _ := time.ParseDuration(fmt.Sprint(result))
 					sorder.SchedulePeriodDuration = int(d.Seconds())
@@ -163,7 +164,7 @@ func NewSOrder(w http.ResponseWriter, r *http.Request) {
 		ReferenceID:   r.FormValue("reference"),
 		Amount:        amt,
 	}
-	schl := &mt.PaymentSchedule{
+	schl := &so.PaymentSchedule{
 		PeriodDuration: time.Duration(period) * time.Second,
 		Active:         true,
 	}
@@ -189,16 +190,16 @@ func NewSOrder(w http.ResponseWriter, r *http.Request) {
 
 	workflowOptions := client.StartWorkflowOptions{
 		ID:        wkflowid,
-		TaskQueue: mt.StandingOrdersTaskQueueName,
+		TaskQueue: so.StandingOrdersTaskQueueName,
 	}
 
 	log.Println("NewSOrder: Starting standingorder workflow ..")
-	we, err := c.ExecuteWorkflow(context.Background(), workflowOptions, mt.StandingOrderWorkflow, *pmnt, *schl)
+	we, err := c.ExecuteWorkflow(context.Background(), workflowOptions, so.StandingOrderWorkflow, *pmnt, *schl)
 
 	if err != nil {
 		log.Fatalln("NewSOrder: Unable to execute workflow", err)
 	}
-	log.Printf("NewSOrder: %sWorkflow started:%s (WorkflowID: %s, RunID: %s)", mt.ColorYellow, mt.ColorReset, we.GetID(), we.GetRunID())
+	log.Printf("NewSOrder: %sWorkflow started:%s (WorkflowID: %s, RunID: %s)", so.ColorYellow, so.ColorReset, we.GetID(), we.GetRunID())
 
 	// Render acknowledgement page
 	utils.Render(w, "templates/NewSOrder.html", struct{ Success bool }{true})

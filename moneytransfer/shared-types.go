@@ -2,11 +2,9 @@ package moneytransfer
 
 import (
 	"os"
-	"time"
 )
 
 var MoneyTransferTaskQueueName = os.Getenv("TRANSFER_MONEY_TASK_QUEUE")
-var StandingOrdersTaskQueueName = os.Getenv("STANDING_ORDERS_TASK_QUEUE")
 var DelayTimerBetweenWithdrawDeposit = os.Getenv("DELAY_TIMER_BETWEEN_WITHDRAW_DEPOSIT")
 
 type PaymentDetails struct {
@@ -14,16 +12,6 @@ type PaymentDetails struct {
 	TargetAccount string
 	ReferenceID   string
 	Amount        int
-}
-
-type PaymentSchedule struct {
-	PeriodDuration time.Duration // seconds
-	Active         bool
-}
-
-type StandingOrder struct {
-	Schedule PaymentSchedule
-	Details  PaymentDetails
 }
 
 type WorkflowInfo struct {
