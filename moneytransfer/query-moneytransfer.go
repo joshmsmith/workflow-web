@@ -26,7 +26,7 @@ func QueryMoneyTransfer(w http.ResponseWriter, wfinfo *WorkflowInfo) (err error)
 	log.Printf("QueryMoneyTransfers: called")
 
 	// Load the Temporal Cloud from env
-	clientOptions, err := utils.LoadClientOption()
+	clientOptions, err := utils.LoadClientOptions()
 	if err != nil {
 		log.Printf("QueryMoneyTransfer: Failed to load Temporal Cloud environment: %v", err)
 		return err

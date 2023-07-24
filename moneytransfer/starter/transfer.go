@@ -1,78 +1,77 @@
 package main
 
 import (
-  "context"
-  "encoding/json"
-  "fmt"
-  "log"
-  "math/rand"
+	"context"
+	"encoding/json"
+	"fmt"
+	"log"
+	"math/rand"
 
-  "go.temporal.io/sdk/client"
+	"go.temporal.io/sdk/client"
 
-  mt "webapp/moneytransfer"
-  "webapp/utils"
+	mt "webapp/moneytransfer"
+	"webapp/utils"
 )
 
 /* Main */
 func main() {
 
-  log.Println("workflow start program..")
+	log.Println("workflow start program..")
 
-  // Load the Temporal Cloud from env
-  clientOptions, err := utils.LoadClientOption()
-  if err != nil {
-    log.Fatalf("Failed to load Temporal Cloud environment: %v", err)
-  }
-  log.Println("connecting to temporal server..")
-  c, err := client.Dial(clientOptions)
-  if err != nil {
-    log.Fatalln("Unable to create Temporal client.", err)
-  }
-  defer c.Close()
+	// Load the Temporal Cloud from env
+	clientOptions, err := utils.LoadClientOptions()
+	if err != nil {
+		log.Fatalf("Failed to load Temporal Cloud environment: %v", err)
+	}
+	log.Println("connecting to temporal server..")
+	c, err := client.Dial(clientOptions)
+	if err != nil {
+		log.Fatalln("Unable to create Temporal client.", err)
+	}
+	defer c.Close()
 
-  // Temporal Client Start Workflow Options
-  workflowID := fmt.Sprintf("go-moneytxfr-wkfl-%d", rand.Intn(99999))
+	// Temporal Client Start Workflow Options
+	workflowID := fmt.Sprintf("go-moneytxfr-wkfl-%d", rand.Intn(99999))
 
-  workflowOptions := client.StartWorkflowOptions{
-    ID:        workflowID,
-    TaskQueue: mt.MoneyTransferTaskQueueName,
-  }
+	workflowOptions := client.StartWorkflowOptions{
+		ID:        workflowID,
+		TaskQueue: mt.MoneyTransferTaskQueueName,
+	}
 
-  // Sample workflow data
-  pmnt := &mt.PaymentDetails{
-    SourceAccount: "harry",
-    TargetAccount: "sally",
-    ReferenceID:   "from Go Starter",
-    Amount:        100,
-  }
-  var delay int = 5 // delay between withdraw and deposit for demo purposes (seconds)
+	// Sample workflow data
+	pmnt := &mt.PaymentDetails{
+		SourceAccount: "harry",
+		TargetAccount: "sally",
+		ReferenceID:   "from Go Starter",
+		Amount:        100,
+	}
+	var delay int = 5 // delay between withdraw and deposit for demo purposes (seconds)
 
-  // ExecuteWorkflow mt.Transfer
-  log.Println("Starting moneytransfer workflow on", mt.MoneyTransferTaskQueueName, "task queue")
+	// ExecuteWorkflow mt.Transfer
+	log.Println("Starting moneytransfer workflow on", mt.MoneyTransferTaskQueueName, "task queue")
 
-  we, err := c.ExecuteWorkflow(context.Background(), workflowOptions, mt.Transfer, *pmnt, delay)
+	we, err := c.ExecuteWorkflow(context.Background(), workflowOptions, mt.TransferWorkflow, *pmnt, delay)
 
-  if err != nil {
-    log.Fatalln("Unable to execute workflow", err)
-  }
-  log.Printf("%sWorkflow started:%s (WorkflowID: %s, RunID: %s)", mt.ColorYellow, mt.ColorReset, we.GetID(), we.GetRunID())
+	if err != nil {
+		log.Fatalln("Unable to execute workflow", err)
+	}
+	log.Printf("%sWorkflow started:%s (WorkflowID: %s, RunID: %s)", mt.ColorYellow, mt.ColorReset, we.GetID(), we.GetRunID())
 
-  // Check workflow status
-  var result string
+	// Check workflow status
+	var result string
 
-  err = we.Get(context.Background(), &result)
+	err = we.Get(context.Background(), &result)
 
-  if err != nil {
-    log.Fatalln("Unable get workflow result", err)
-  }
+	if err != nil {
+		log.Fatalln("Unable get workflow result", err)
+	}
 
-  data, err := json.MarshalIndent(result, "", "  ")
-  if err != nil {
-    log.Fatalln("Unable to format result in JSON format", err)
-  }
-  log.Printf("%sWorkflow result:%s %s", mt.ColorYellow, mt.ColorReset, string(data))
+	data, err := json.MarshalIndent(result, "", "  ")
+	if err != nil {
+		log.Fatalln("Unable to format result in JSON format", err)
+	}
+	log.Printf("%sWorkflow result:%s %s", mt.ColorYellow, mt.ColorReset, string(data))
 
-  // done
-  log.Print("Start workflow client done.")
+	// done
+	log.Print("Start workflow client done.")
 }
-

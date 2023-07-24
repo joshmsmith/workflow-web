@@ -10,7 +10,7 @@ import (
 )
 
 /* Transfer Workflow */
-func Transfer(ctx workflow.Context, input PaymentDetails, delay int) (string, error) {
+func TransferWorkflow(ctx workflow.Context, input PaymentDetails, delay int) (string, error) {
 
 	// Define workflow logger (avoid repeating messages on replay etc)
 	logger := workflow.GetLogger(ctx)

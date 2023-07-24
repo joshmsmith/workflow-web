@@ -31,7 +31,7 @@ func StartMoneyTransfer(pmnt *PaymentDetails) (wfinfo *WorkflowInfo, starterr er
 	}
 
 	// Load the Temporal Cloud from env
-	clientOptions, err := utils.LoadClientOption()
+	clientOptions, err := utils.LoadClientOptions()
 	if err != nil {
 		log.Printf("StartMoneyTransfer-%s: Failed to load Temporal Cloud environment: %v", thisid, err)
 		wfinfo.Info = err.Error()
@@ -63,7 +63,7 @@ func StartMoneyTransfer(pmnt *PaymentDetails) (wfinfo *WorkflowInfo, starterr er
 	// ExecuteWorkflow moneytransfer.Transfer
 	log.Printf("StartMoneyTransfer-%s: Starting moneytransfer workflow on %s task queue", thisid, MoneyTransferTaskQueueName)
 
-	we, err := c.ExecuteWorkflow(context.Background(), workflowOptions, Transfer, *pmnt, delay)
+	we, err := c.ExecuteWorkflow(context.Background(), workflowOptions, TransferWorkflow, *pmnt, delay)
 
 	if err != nil {
 		log.Printf("StartMoneyTransfer-%s: Error, Unable to execute workflow %v", thisid, err)

@@ -19,7 +19,7 @@ func main() {
 	log.Println("workflow start program..")
 
 	// Load the Temporal Cloud from env
-	clientOptions, err := utils.LoadClientOption()
+	clientOptions, err := utils.LoadClientOptions()
 	if err != nil {
 		log.Fatalf("Failed to load Temporal Cloud environment: %v", err)
 	}

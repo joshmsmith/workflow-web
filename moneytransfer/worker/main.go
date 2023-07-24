@@ -7,14 +7,14 @@ import (
 	"go.temporal.io/sdk/worker"
 
 	mt "webapp/moneytransfer"
-  "webapp/utils"
+	"webapp/utils"
 )
 
 func main() {
 	log.Printf("%sGo worker starting..%s", mt.ColorGreen, mt.ColorReset)
 
 	// Load the Temporal Cloud from env
-	clientOptions, err := utils.LoadClientOption()
+	clientOptions, err := utils.LoadClientOptions()
 	if err != nil {
 		log.Fatalf("Failed to load Temporal Cloud environment: %v", err)
 	}
@@ -33,7 +33,7 @@ func main() {
 
 	// This worker hosts both Workflow and Activity functions.
 	log.Println("Go worker registering for Workflow moneytransfer.Transfer..")
-	w.RegisterWorkflow(mt.Transfer)
+	w.RegisterWorkflow(mt.TransferWorkflow)
 
 	log.Println("Go worker registering for Activity moneytransfer.Withdraw..")
 	w.RegisterActivity(mt.Withdraw)

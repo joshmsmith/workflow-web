@@ -19,3 +19,6 @@
 .envrc
 save
 
+assets/transfer-workflow.go.txt
+assets/dev.txt
+dev.txt

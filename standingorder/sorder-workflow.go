@@ -206,7 +206,7 @@ func StandingOrderWorkflow(ctx workflow.Context, pdetails mt.PaymentDetails, psc
 
 			var delay int = 5 // just to slow it down for demos
 			var result string
-			err := workflow.ExecuteChildWorkflow(ctx, mt.Transfer, sorder.Details, delay).Get(ctx, &result)
+			err := workflow.ExecuteChildWorkflow(ctx, mt.TransferWorkflow, sorder.Details, delay).Get(ctx, &result)
 
 			if err != nil {
 				logger.Error(ColorGreen, "S/O-Workflow:", ColorRed, "Child workflow Transfer failed!", ColorReset, err)

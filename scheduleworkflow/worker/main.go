@@ -13,7 +13,7 @@ import (
 func main() {
 	log.Printf("%sGo worker starting..%s", sw.ColorGreen, sw.ColorReset)
 
-	clientOptions, err := utils.LoadClientOption()
+	clientOptions, err := utils.LoadClientOptions()
 	if err != nil {
 		log.Fatalf("Failed to load Temporal Cloud environment: %v", err)
 	}

@@ -162,7 +162,7 @@ cd moneytransfer
 go run worker/main.go
 
 2023/06/06 11:27:05 Go worker starting..
-2023/06/06 11:27:05 LoadClientOption: myns.abcdf.tmprl.cloud:7233 myns.abcdf ~/.temporal/tclient-myns.pem ~/.temporal/tclient-myns.key   false true
+2023/06/06 11:27:05 LoadClientOptions: myns.abcdf.tmprl.cloud:7233 myns.abcdf ~/.temporal/tclient-myns.pem ~/.temporal/tclient-myns.key   false true
 2023/06/06 11:27:05 Go worker connecting to server..
 2023/06/06 11:27:05 Go worker initialising..
 2023/06/06 11:27:05 Go worker registering for Workflow moneytransfer.Transfer..

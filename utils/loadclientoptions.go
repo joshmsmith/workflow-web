@@ -4,19 +4,17 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/converter"
-	"go.temporal.io/sdk/workflow"
 
 	dataconverter "webapp/dataconverter"
 )
 
-/* LoadClientOption - Return client options for Temporal Cloud */
-func LoadClientOption() (client.Options, error) {
+/* LoadClientOptions - Return client options for Temporal Cloud */
+func LoadClientOptions() (client.Options, error) {
 
 	// Read env variables
 	targetHost := os.Getenv("TEMPORAL_HOST_URL")
@@ -32,7 +30,7 @@ func LoadClientOption() (client.Options, error) {
 
 	encyptPayload, _ := strconv.ParseBool(os.Getenv("ENCRYPT_PAYLOAD"))
 
-	//log.Println("LoadClientOption:", targetHost, namespace, clientCert, clientKey, serverRootCACert, serverName, insecureSkipVerify, encyptPayload)
+	//log.Println("LoadClientOptions:", targetHost, namespace, clientCert, clientKey, serverRootCACert, serverName, insecureSkipVerify, encyptPayload)
 
 	// Load client cert
 	cert, err := tls.LoadX509KeyPair(clientCert, clientKey)
@@ -94,26 +92,3 @@ func LoadClientOption() (client.Options, error) {
 	}
 }
 
-/* UpcertSearchAttribute in Temporal Workflow */
-func UpcertSearchAttribute(ctx workflow.Context, attribute string, value string) (err error) {
-
-	attributes := map[string]interface{}{
-		attribute: value,
-	}
-	upserterr := workflow.UpsertSearchAttributes(ctx, attributes)
-	if upserterr != nil {
-		log.Println("Start: Failed to Upsert Search Attributes", upserterr)
-	}
-	return upserterr
-}
-
-/* GenRandString of requested length */
-/* used in workflow id */
-/*
-func GenRandString(length int) string {
-	rand.Seed(time.Now().UnixNano())
-	b := make([]byte, length+2)
-	rand.Read(b)
-	return fmt.Sprintf("%x", b)[2 : length+2]
-}
-*/

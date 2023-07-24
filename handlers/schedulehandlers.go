@@ -19,7 +19,7 @@ func ListSchedules(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("ListSchedules: called")
 
-	clientOptions, err := utils.LoadClientOption()
+	clientOptions, err := utils.LoadClientOptions()
 	if err != nil {
 		log.Fatalf("ListSchedules: Failed to load Temporal Cloud environment: %v", err)
 	}
@@ -98,7 +98,7 @@ func ShowSchedule(w http.ResponseWriter, r *http.Request) {
 	schedDets.Id = r.FormValue("id")
 
 	// Connect to Temporal
-	clientOptions, err := utils.LoadClientOption()
+	clientOptions, err := utils.LoadClientOptions()
 	if err != nil {
 		log.Fatalf("ShowSchedule: Failed to load Temporal Cloud environment: %v", err)
 	}
@@ -134,7 +134,7 @@ func UpdateSchedule(w http.ResponseWriter, r *http.Request) {
 	log.Printf("UpdateSchedule: scheduleID: %s, Description: %s, Minutes: %d", scheduleID, comment, minutes)
 
 	// Connect to Temporal
-	clientOptions, err := utils.LoadClientOption()
+	clientOptions, err := utils.LoadClientOptions()
 	if err != nil {
 		log.Fatalf("UpdateSchedule: Failed to load Temporal Cloud environment: %v", err)
 	}
@@ -202,7 +202,7 @@ func DeleteSchedule(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm() //Parse url parameters passed, then parse the response packet for the POST body (request body)
 	scheduleID := r.FormValue("id")
 
-	clientOptions, err := utils.LoadClientOption()
+	clientOptions, err := utils.LoadClientOptions()
 	if err != nil {
 		log.Fatalf("DeleteSchedule: Failed to load Temporal Cloud environment: %v", err)
 	}

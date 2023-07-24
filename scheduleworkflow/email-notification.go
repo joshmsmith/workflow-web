@@ -36,7 +36,7 @@ func SendEmailNotification(ctx context.Context, processStage int, sd ScheduleDet
 	log.Printf("%sSendEmailNotification:%s email: %s, subject: %s", ColorGreen, ColorReset, sd.Email, emailSubject)
 
 	// Schedule Details may have changed since passed to workflow at creation
-	clientOptions, err := utils.LoadClientOption()
+	clientOptions, err := utils.LoadClientOptions()
 	if err != nil {
 		log.Fatalf("%sSendEmailNotification:%s Failed to load Temporal Cloud environment:%s %v\n", ColorGreen, ColorRed, ColorReset, err)
 	}

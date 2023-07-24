@@ -18,7 +18,7 @@ func StartScheduleWorkflow(sd ScheduleDetails) (starterr error) {
 
   ctx := context.Background()
 
-  clientOptions, err := utils.LoadClientOption()
+  clientOptions, err := utils.LoadClientOptions()
   if err != nil {
     log.Fatalf("StartScheduleWorkflow-%s: Failed to load Temporal Cloud environment, err: %v", thisid, err)
   }
