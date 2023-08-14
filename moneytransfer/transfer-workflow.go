@@ -17,7 +17,7 @@ func TransferWorkflow(ctx workflow.Context, input PaymentDetails, delay int) (st
 	logger.Info(ColorGreen, "Transfer-Workflow:", ColorReset, "Started")
 
 	// RetryPolicy specifies how to automatically handle retries if an Activity fails.
-	retrypolicy := &temporal.RetryPolicy{
+	activityretrypolicy := &temporal.RetryPolicy{
 		InitialInterval:        time.Second,
 		BackoffCoefficient:     2.0,
 		MaximumInterval:        100 * time.Second,
@@ -25,16 +25,13 @@ func TransferWorkflow(ctx workflow.Context, input PaymentDetails, delay int) (st
 		NonRetryableErrorTypes: []string{"InvalidAccountError", "InsufficientFundsError"},
 	}
 
-	options := workflow.ActivityOptions{
-		// Timeout options specify when to automatically timeout Activity functions.
-		StartToCloseTimeout: time.Minute,
-
-		// Temporal retries failed Activities by default.
-		RetryPolicy: retrypolicy,
+	activityoptions := workflow.ActivityOptions{
+		StartToCloseTimeout: time.Minute,         // Timeout options specify when to automatically timeout Activity functions.
+		RetryPolicy:         activityretrypolicy, // Temporal retries failed Activities by default.
 	}
 
 	// Apply the options.
-	ctx = workflow.WithActivityOptions(ctx, options)
+	ctx = workflow.WithActivityOptions(ctx, activityoptions)
 
 	// Set search attribute status to PROCESSING
 	_ = utils.UpcertSearchAttribute(ctx, "CustomStringField", "PROCESSING")
