@@ -10,6 +10,8 @@ import (
 
 	"github.com/gorilla/mux"
 
+   _ "net/http/pprof"
+
 	"webapp/handlers"
 	"webapp/transferclient"
 )
@@ -57,6 +59,10 @@ func main() {
 		queryDelay = 20
 	}
 	go transferclient.ExecuteCheckTransferTaskCronJob(queryDelay)
+
+  // pprof thread /debug/pprof
+	go http.ListenAndServe("localhost:6060", nil)
+  
 
 	// Serve
 	log.Print("Serve Http on 8085")
