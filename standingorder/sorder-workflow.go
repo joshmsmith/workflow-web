@@ -14,7 +14,7 @@ import (
 func StandingOrderWorkflow(ctx workflow.Context, pdetails mt.PaymentDetails, pschedule PaymentSchedule) (string, error) {
 
 	logger := workflow.GetLogger(ctx)
-	logger.Info(ColorGreen, "S/O-Workflow:", ColorReset, "Started")
+	logger.Info(ColorGreen, "S/O-Workflow:", ColorReset, "Started", "-", workflow.GetInfo(ctx).WorkflowExecution.ID)
 
 	// local workflow variable
 	sorder := StandingOrder{
@@ -224,6 +224,6 @@ func StandingOrderWorkflow(ctx workflow.Context, pdetails mt.PaymentDetails, psc
 		}
 	}
 
-	logger.Info(ColorGreen, "S/O-Workflow:", ColorReset, "Complete.")
+	logger.Info(ColorGreen, "S/O-Workflow:", ColorReset, "Complete", "-", workflow.GetInfo(ctx).WorkflowExecution.ID)
 	return "Workflow Completed.", nil
 }

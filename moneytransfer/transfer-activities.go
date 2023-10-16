@@ -7,7 +7,7 @@ import (
 )
 
 /* Withdraw Activity */
-func Withdraw (ctx context.Context, data PaymentDetails) (string, error) {
+func Withdraw(ctx context.Context, data PaymentDetails) (string, error) {
 
 	log.Printf("%sTransfer-Workflow-Withdraw-Activity:%s Withdrawing $%d from account: %s.%s\n",
 		ColorGreen, ColorBlue, data.Amount, data.SourceAccount, ColorReset)
@@ -24,7 +24,7 @@ func Withdraw (ctx context.Context, data PaymentDetails) (string, error) {
 }
 
 /* Deposit Activity */
-func Deposit (ctx context.Context, data PaymentDetails) (string, error) {
+func Deposit(ctx context.Context, data PaymentDetails) (string, error) {
 
 	log.Printf("%sTransfer-Workflow-Deposit-Activity:%s Depositing $%d into account: %s.%s",
 		ColorGreen, ColorBlue, data.Amount, data.TargetAccount, ColorReset)
@@ -40,7 +40,7 @@ func Deposit (ctx context.Context, data PaymentDetails) (string, error) {
 }
 
 /* Refund Activity */
-func Refund (ctx context.Context, data PaymentDetails) (string, error) {
+func Refund(ctx context.Context, data PaymentDetails) (string, error) {
 
 	log.Printf("%sTransfer-Workflow-Refund-Activity:%s Refunding $%v back into account: %v.%s",
 		ColorGreen, ColorBlue, data.Amount, data.SourceAccount, ColorReset)

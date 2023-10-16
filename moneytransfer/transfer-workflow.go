@@ -14,7 +14,7 @@ func TransferWorkflow(ctx workflow.Context, input PaymentDetails, delay int) (st
 
 	// Define workflow logger (avoid repeating messages on replay etc)
 	logger := workflow.GetLogger(ctx)
-	logger.Info(ColorGreen, "Transfer-Workflow:", ColorReset, "Started")
+	logger.Info(ColorGreen, "Transfer-Workflow:", ColorReset, "Started", "-", workflow.GetInfo(ctx).WorkflowExecution.ID)
 
 	// RetryPolicy specifies how to automatically handle retries if an Activity fails.
 	activityretrypolicy := &temporal.RetryPolicy{
@@ -85,7 +85,7 @@ func TransferWorkflow(ctx workflow.Context, input PaymentDetails, delay int) (st
 	// Set search attribute status to COMPLETED
 	_ = utils.UpcertSearchAttribute(ctx, "CustomStringField", "COMPLETED")
 
-	logger.Info(ColorGreen, "Transfer-Workflow:", ColorReset, "Complete.")
+	logger.Info(ColorGreen, "Transfer-Workflow:", ColorReset, "Complete", "-", workflow.GetInfo(ctx).WorkflowExecution.ID)
 
 	return result, nil
 }

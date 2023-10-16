@@ -10,7 +10,7 @@ import (
 func ScheduleWorkflow(ctx workflow.Context, sd ScheduleDetails) error {
 
 	logger := workflow.GetLogger(ctx)
-	logger.Info(ColorGreen, "ScheduleWorkflow:", ColorReset, "Started - StartTime:", workflow.Now(ctx))
+	logger.Info(ColorGreen, "ScheduleWorkflow:", ColorReset, "Started - StartTime:", workflow.Now(ctx), "-", workflow.GetInfo(ctx).WorkflowExecution.ID)
 
 	ao := workflow.ActivityOptions{
 		StartToCloseTimeout: 10 * time.Second,
@@ -43,7 +43,7 @@ func ScheduleWorkflow(ctx workflow.Context, sd ScheduleDetails) error {
 		return err
 	}
 
-	logger.Info(ColorGreen, "ScheduleWorkflow:", ColorReset, "Complete.")
+	logger.Info(ColorGreen, "ScheduleWorkflow:", ColorReset, "Complete", "-", workflow.GetInfo(ctx).WorkflowExecution.ID)
 
 	return nil
 }
