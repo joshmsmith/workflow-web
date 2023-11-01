@@ -3,6 +3,7 @@
 CREATE USER 'mysqluser'@'%' IDENTIFIED WITH mysql_native_password BY 'mysqlpw';
 
 
+/* Database for mock bank */
 CREATE DATABASE dataentry;
 GRANT ALL ON dataentry.* TO 'mysqluser'@'%';
 
@@ -22,7 +23,14 @@ CREATE TABLE accounts (
   UNIQUE KEY transfer (account_name)
 ) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
-/* Database for moneytransfer */
+DROP TABLE IF EXISTS bankapistatus;
+CREATE TABLE bankapistatus (
+  up  INT NOT NULL DEFAULT 1
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+INSERT INTO bankapistatus (up) VALUES (1);
+
+/* Database for moneytransfer mock queue */
 CREATE DATABASE moneytransfer;
 GRANT ALL ON moneytransfer.* TO 'mysqluser'@'%';
 

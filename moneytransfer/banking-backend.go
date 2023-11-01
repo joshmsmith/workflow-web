@@ -48,3 +48,36 @@ func ReadDbAccounts() DbAccounts {
 	}
 	return dbaccounts
 }
+
+
+/* checkBankService */
+func checkBankService() bool {
+	//bankStatus := os.Getenv("BANK_SERVICE_AVAILABLE")
+	var bankAPIStatus int = 10
+
+	// Get database connection
+	dbc, _ := utils.GetDBConnection()
+	defer dbc.Close()
+
+	sqlStatement := `SELECT up FROM dataentry.bankapistatus`
+	rows, dberr := dbc.Query(sqlStatement)
+	if dberr != nil {
+		if dberr == sql.ErrNoRows {
+			log.Println("checkBankService: status table has no rows")
+		} else {
+			log.Fatal(dberr)
+		}
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		rows.Scan(&bankAPIStatus)
+	}
+
+	if bankAPIStatus != 1 {
+		log.Printf("%scheckBankService: Bank service API is DOWN (status: %d)%s", ColorCyan, bankAPIStatus, ColorReset)
+		return bool(false)
+	}
+	return bool(true)
+}
+

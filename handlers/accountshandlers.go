@@ -22,6 +22,10 @@ type Account struct {
     AccountBalance float64
 }
 
+type BankStatusType struct {
+    Up      string
+}
+
 
 /* Index Home */
 func Home(w http.ResponseWriter, r *http.Request) {
@@ -182,5 +186,88 @@ func DeleteAccount(w http.ResponseWriter, r *http.Request) {
 
   // Display deleteaccount confirmation
   utils.Render(w, "templates/DeleteAccount.html", delstat)
+}
+
+/* BankStatus */
+func BankStatus(w http.ResponseWriter, r *http.Request) {
+
+  log.Println("BankStatus: called")
+
+  // Get database connection
+  dbc, _ := utils.GetDBConnection()
+  defer dbc.Close()
+
+  sqlStatement := fmt.Sprintf("select up from dataentry.bankapistatus")
+  rows, dberr := dbc.Query(sqlStatement)
+  if dberr != nil {
+    if dberr == sql.ErrNoRows {
+      log.Println("BankStatus: no db entry found")
+    } else {
+      log.Fatal(dberr)
+    }
+  }
+  defer rows.Close()
+
+  // read entry
+  var bankUPStatus int
+  bankStatus := BankStatusType{Up: "true"}
+
+  for rows.Next() {
+    rows.Scan(&bankUPStatus)
+  }
+  log.Println("BankUPStatus:", bankUPStatus )
+ 
+  if bankUPStatus != 1 {
+    bankStatus.Up = "down"
+  } 
+
+  // Display details
+  utils.Render(w, "templates/BankStatus.html", bankStatus)
+}
+
+/* OpenBank */
+func OpenBank (w http.ResponseWriter, r *http.Request) {
+
+  log.Println("OpenBank: called")
+
+  dbc, _ := utils.GetDBConnection()
+  defer dbc.Close()
+
+  sqlStatement := fmt.Sprintf("update dataentry.bankapistatus set up=1")
+
+  stmtIns, dberr := dbc.Prepare(sqlStatement)
+  if dberr != nil {
+      log.Fatal("OpenBank: bank status update Prepare failed! ", dberr)
+  }
+  _, dberr = stmtIns.Exec()
+  if dberr != nil {
+      log.Fatal("OpenBank: bank status update Exec failed! ", dberr)
+  }
+  log.Println("OpenBank: Status Updated.")
+
+  utils.Render(w, "templates/OpenBank.html", struct{ Success bool }{true})
+}
+
+/* CloseBank */
+func CloseBank (w http.ResponseWriter, r *http.Request) {
+
+  log.Println("CloseBank: called")
+
+  dbc, _ := utils.GetDBConnection()
+  defer dbc.Close()
+
+  sqlStatement := fmt.Sprintf("update dataentry.bankapistatus set up=503")
+
+  stmtIns, dberr := dbc.Prepare(sqlStatement)
+  if dberr != nil {
+      log.Fatal("CloseBank: bank status update Prepare failed! ", dberr)
+  }
+  _, dberr = stmtIns.Exec()
+  if dberr != nil {
+      log.Fatal("CloseBank: bank status update Exec failed! ", dberr)
+  }
+  log.Println("CloseBank: Status Updated.")
+
+  utils.Render(w, "templates/CloseBank.html", struct{ Success bool }{true})
 }
 

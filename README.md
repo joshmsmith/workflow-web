@@ -1,7 +1,7 @@
 # webapp with Temporal workflow backend
 Sample golang web app with local db task queue and Temporal Cloud workflow backend interaction
 
-![app-homepage](./assets/home.png)
+![app-homepage](./assets/Home.png)
 
 ## Start local app database first
 The sample mysql database has been configured to run using docker-compose locally and initialise the database with users and sample data.
@@ -77,8 +77,6 @@ export TEMPORAL_INSECURE_SKIP_VERIFY=false
 export TRANSFER_MONEY_TASK_QUEUE="go-moneytransfer"
 # timer for transfer table to be checked (seconds)
 export CHECK_TRANSFER_TASKQUEUE_TIMER=20
-# simulate bank down on Deposit activity
-export BANK_SERVICE_AVAILABLE="true"
 
 # payload data encryption
 export ENCRYPT_PAYLOAD=false
@@ -108,7 +106,7 @@ workflow.go:    _ = UpcertSearchAttribute(ctx, "CustomStringField", "FAILED")
 workflow.go:  _ = UpcertSearchAttribute(ctx, "CustomStringField", "COMPLETED")
 ```
    
-Note: If you simulate a banking service outage on a deposit activity the BANK_SERVICE_AVAILABLE env is read by the worker on startup so changing the env required a worker restart.
+Note: To simulate a banking service outage on an activity without the need to restart the workers there is a bank status UI in the Bank management app.
 
 ## Start the webapp and navigate to view the local tasks
 
@@ -231,15 +229,11 @@ There is a sleep timer between the Withdraw and Deposit Activities.  This allows
 
 ![console-worker](./assets/WorkerOutput.png)
 
-### Simulate Banking Client unavailable on Deposit
+### Simulate Banking Client unavailable
 
-You can disable the Banking app Deposit function by setting the environment variable:
-```
-export BANK_SERVICE_AVAILABLE=false
-(start worker..)
-```
+You can disable the Banking app Deposit function by setting the Bank Open/Closed status in the Bank App UI:
 
-![code-bankservicedown](./assets/BankServiceDown.png)
+![code-bankservicedown](./assets/BankStatus.png)
 
 The Activity return policy does not contain:
 ```go
@@ -251,15 +245,12 @@ so the activity will loop retrying, backing off etc..
 
 ![console-workerdepositerror](./assets/WorkerDepositError.png)
 
-Change the env to simulate bank back up and restart the worker.  
-After resetting the env and worker restart..
+Change the bank status back to Open to simulate bank back up.  
 
 ![console-workerdepositcompletes](./assets/WorkerDepositCompletes.png)
 
-Notice the Workflow History for the Deposit Activity has multiple retry count:
+Notice the Workflow History for the affected Withdraw or Deposit Activity will have a multiple retry count:
 
 ![tcloudui-workflowhistoryactivityretries](./assets/TCloudWorkflowHistoryDepositActivityRetries.png)
   
-
-note: Should probably make this dynamic at some point :) 
 

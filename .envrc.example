@@ -24,8 +24,6 @@ export STANDING_ORDERS_TASK_QUEUE="StandingOrders"
 export CHECK_TRANSFER_TASKQUEUE_TIMER=20
 # timer for demo delay between Withdraw and Deposit Activities
 export DELAY_TIMER_BETWEEN_WITHDRAW_DEPOSIT=15
-# simulate bank down on Deposit activity
-export BANK_SERVICE_AVAILABLE="true"
 
 # payload data encryption
 export ENCRYPT_PAYLOAD=false

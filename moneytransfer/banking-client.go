@@ -3,14 +3,11 @@ package moneytransfer
 // This code simulates a client for a hypothetical banking service.
 // It supports both withdrawals and deposits, and generates a
 // pseudorandom transaction ID for each request.
-//
-// Tip: You can modify these functions to introduce delays or errors, allowing
-// you to experiment with failures and timeouts.
 import (
 	"errors"
-	"log"
 	"math/rand"
-	"os"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type account struct {
@@ -25,12 +22,12 @@ type bank struct {
 /* findAccount */
 //func (b bank) findAccount(accountNumber string) (account, error) {
 //
-//	for _, v := range b.Accounts {
-//		if v.AccountNumber == accountNumber {
-//			return v, nil
-//		}
-//	}
-//	return account{}, errors.New("account not found")
+//  for _, v := range b.Accounts {
+//    if v.AccountNumber == accountNumber {
+//      return v, nil
+//    }
+//  }
+//  return account{}, errors.New("account not found")
 //}
 
 /* findDbAccount */
@@ -70,7 +67,7 @@ func (m *BankIntermittentError) Error() string {
 
 /* mockBank accounts
  *
- * ToDo?: Query details from database
+ * Moved accounts to mysql database
  */
 var mockBank = &bank{
 	Accounts: []account{
@@ -94,6 +91,12 @@ type BankingService struct {
  */
 func (client BankingService) Withdraw(accountNumber string, amount int, referenceID string) (string, error) {
 
+	// Check Bank Status
+	if !checkBankService() {
+		return "", &BankIntermittentError{}
+	}
+
+	// Check Account
 	acct, err := mockBank.findDbAccount(accountNumber)
 
 	if err != nil {
@@ -102,6 +105,7 @@ func (client BankingService) Withdraw(accountNumber string, amount int, referenc
 	if amount > int(acct.Balance) {
 		return "", &InsufficientFundsError{}
 	}
+
 	return generateTransactionID("W", 10), nil
 }
 
@@ -113,15 +117,17 @@ func (client BankingService) Withdraw(accountNumber string, amount int, referenc
  */
 func (client BankingService) Deposit(accountNumber string, amount int, referenceID string) (string, error) {
 
+	// Check Bank Status
+	if !checkBankService() {
+		return "", &BankIntermittentError{}
+	}
+
+	// Check Account
 	_, err := mockBank.findDbAccount(accountNumber)
 	if err != nil {
 		return "", &InvalidAccountError{}
 	}
 
-	// Check Bank Status
-	if !checkService() {
-		return "", &BankIntermittentError{}
-	}
 	return generateTransactionID("D", 10), nil
 }
 
@@ -133,17 +139,4 @@ func generateTransactionID(prefix string, length int) string {
 		randChars[i] = allowedChars[rand.Intn(len(allowedChars))]
 	}
 	return prefix + string(randChars)
-}
-
-/* checkService */
-func checkService() bool {
-	bankStatus := os.Getenv("BANK_SERVICE_AVAILABLE")
-	log.Printf("%sBankService: Available: %s%s", ColorCyan, bankStatus, ColorReset)
-	if bankStatus != "" {
-		if bankStatus == "false" {
-			log.Printf("%sBankService: Down%s", ColorCyan, ColorReset)
-			return bool(false)
-		}
-	}
-	return bool(true)
 }

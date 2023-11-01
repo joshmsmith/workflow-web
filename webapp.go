@@ -31,6 +31,9 @@ func main() {
 	router.HandleFunc("/showaccount", handlers.ShowAccount)
 	router.HandleFunc("/newaccount", handlers.NewAccount)
 	router.HandleFunc("/deleteaccount", handlers.DeleteAccount)
+	router.HandleFunc("/bankstatus", handlers.BankStatus)
+	router.HandleFunc("/openbank", handlers.OpenBank)
+	router.HandleFunc("/closebank", handlers.CloseBank)
 
 	// moneytransfer database handlers
 	router.HandleFunc("/transfers", handlers.ListTransfers)
