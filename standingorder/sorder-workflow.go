@@ -8,13 +8,13 @@ import (
 	"go.temporal.io/sdk/workflow"
 
 	mt "webapp/moneytransfer"
-	"webapp/utils"
+	u "webapp/utils"
 )
 
 func StandingOrderWorkflow(ctx workflow.Context, pdetails mt.PaymentDetails, pschedule PaymentSchedule) (string, error) {
 
 	logger := workflow.GetLogger(ctx)
-	logger.Info(ColorGreen, "S/O-Workflow:", ColorReset, "Started", "-", workflow.GetInfo(ctx).WorkflowExecution.ID)
+	logger.Info(u.ColorGreen, "S/O-Workflow:", u.ColorReset, "Started", "-", workflow.GetInfo(ctx).WorkflowExecution.ID)
 
 	// local workflow variable
 	sorder := StandingOrder{
@@ -23,15 +23,15 @@ func StandingOrderWorkflow(ctx workflow.Context, pdetails mt.PaymentDetails, psc
 	}
 
 	// upcert StandingOrder as ACTIVE
-	_ = utils.UpcertSearchAttribute(ctx, "CustomStringField", "ACTIVE-SORDER")
+	_ = u.UpcertSearchAttribute(ctx, "CustomStringField", "ACTIVE-SORDER")
 
 	// Define query handlers for variables
 	//
 	// PaymentOrigin query handler
 	QueryPaymentOrigin := "payment.origin"
 	err := workflow.SetQueryHandler(ctx, QueryPaymentOrigin, func() (string, error) {
-		logger.Info(ColorGreen, "S/O-Workflow:", ColorCyan, "Received Query - QueryPaymentOrigin:",
-			sorder.Details.SourceAccount, ColorReset)
+		logger.Info(u.ColorGreen, "S/O-Workflow:", u.ColorCyan, "Received Query - QueryPaymentOrigin:",
+			sorder.Details.SourceAccount, u.ColorReset)
 		return sorder.Details.SourceAccount, nil
 	})
 	if err != nil {
@@ -42,8 +42,8 @@ func StandingOrderWorkflow(ctx workflow.Context, pdetails mt.PaymentDetails, psc
 	// PaymentDestination query handler
 	QueryPaymentDestination := "payment.destination"
 	err = workflow.SetQueryHandler(ctx, QueryPaymentDestination, func() (string, error) {
-		logger.Info(ColorGreen, "S/O-Workflow:", ColorCyan, "Received Query - QueryPaymentDestination:",
-			sorder.Details.TargetAccount, ColorReset)
+		logger.Info(u.ColorGreen, "S/O-Workflow:", u.ColorCyan, "Received Query - QueryPaymentDestination:",
+			sorder.Details.TargetAccount, u.ColorReset)
 		return sorder.Details.TargetAccount, nil
 	})
 	if err != nil {
@@ -54,8 +54,8 @@ func StandingOrderWorkflow(ctx workflow.Context, pdetails mt.PaymentDetails, psc
 	// PaymentAmount query handler
 	QueryPaymentAmount := "payment.amount"
 	err = workflow.SetQueryHandler(ctx, QueryPaymentAmount, func() (string, error) {
-		logger.Info(ColorGreen, "S/O-Workflow:", ColorCyan, "Received Query - QueryPaymentAmount:",
-			sorder.Details.Amount, ColorReset)
+		logger.Info(u.ColorGreen, "S/O-Workflow:", u.ColorCyan, "Received Query - QueryPaymentAmount:",
+			sorder.Details.Amount, u.ColorReset)
 		return fmt.Sprint(sorder.Details.Amount), nil
 	})
 	if err != nil {
@@ -66,8 +66,8 @@ func StandingOrderWorkflow(ctx workflow.Context, pdetails mt.PaymentDetails, psc
 	// PaymentReference query handler
 	QueryPaymentReference := "payment.reference"
 	err = workflow.SetQueryHandler(ctx, QueryPaymentReference, func() (string, error) {
-		logger.Info(ColorGreen, "S/O-Workflow:", ColorCyan, "Received Query - QueryPaymentReference:",
-			sorder.Details.ReferenceID, ColorReset)
+		logger.Info(u.ColorGreen, "S/O-Workflow:", u.ColorCyan, "Received Query - QueryPaymentReference:",
+			sorder.Details.ReferenceID, u.ColorReset)
 		return sorder.Details.ReferenceID, nil
 	})
 	if err != nil {
@@ -78,8 +78,8 @@ func StandingOrderWorkflow(ctx workflow.Context, pdetails mt.PaymentDetails, psc
 	// SchedulePeriod query handler
 	QuerySchedulePeriodDuration := "schedule.periodduration"
 	err = workflow.SetQueryHandler(ctx, QuerySchedulePeriodDuration, func() (string, error) {
-		logger.Info(ColorGreen, "S/O-Workflow:", ColorCyan, "Received Query - QuerySchedulePeriodDuration:",
-			sorder.Schedule.PeriodDuration, ColorReset)
+		logger.Info(u.ColorGreen, "S/O-Workflow:", u.ColorCyan, "Received Query - QuerySchedulePeriodDuration:",
+			sorder.Schedule.PeriodDuration, u.ColorReset)
 		return fmt.Sprint(sorder.Schedule.PeriodDuration), nil
 	})
 	if err != nil {
@@ -101,8 +101,8 @@ func StandingOrderWorkflow(ctx workflow.Context, pdetails mt.PaymentDetails, psc
 		var amountSignal int
 		ch.Receive(ctx, &amountSignal)
 
-		logger.Info(ColorGreen, "S/O-Workflow:", ColorYellow, "Received Signal - sorderamount:",
-			amountSignal, ColorReset)
+		logger.Info(u.ColorGreen, "S/O-Workflow:", u.ColorYellow, "Received Signal - sorderamount:",
+			amountSignal, u.ColorReset)
 
 		// update workflow variable value
 		sorder.Details.Amount = amountSignal
@@ -117,8 +117,8 @@ func StandingOrderWorkflow(ctx workflow.Context, pdetails mt.PaymentDetails, psc
 		var referenceSignal string
 		ch.Receive(ctx, &referenceSignal)
 
-		logger.Info(ColorGreen, "S/O-Workflow:", ColorYellow, "Received Signal - sorderreference:",
-			referenceSignal, ColorReset)
+		logger.Info(u.ColorGreen, "S/O-Workflow:", u.ColorYellow, "Received Signal - sorderreference:",
+			referenceSignal, u.ColorReset)
 
 		// update workflow variable value
 		sorder.Details.ReferenceID = referenceSignal
@@ -134,8 +134,8 @@ func StandingOrderWorkflow(ctx workflow.Context, pdetails mt.PaymentDetails, psc
 		var scheduleSignal int
 		ch.Receive(ctx, &scheduleSignal)
 
-		logger.Info(ColorGreen, "S/O-Workflow:", ColorYellow, "Received Signal - sorderschedule:",
-			scheduleSignal, ColorReset)
+		logger.Info(u.ColorGreen, "S/O-Workflow:", u.ColorYellow, "Received Signal - sorderschedule:",
+			scheduleSignal, u.ColorReset)
 
 		// update workflow variable value
 		sorder.Schedule.PeriodDuration = time.Duration(scheduleSignal) * time.Second
@@ -150,8 +150,8 @@ func StandingOrderWorkflow(ctx workflow.Context, pdetails mt.PaymentDetails, psc
 		var cancelSOrderSignal bool
 		ch.Receive(ctx, &cancelSOrderSignal)
 
-		logger.Info(ColorGreen, "S/O-Workflow:", ColorYellow, "Received Signal - cancelsorder:",
-			cancelSOrderSignal, ColorReset)
+		logger.Info(u.ColorGreen, "S/O-Workflow:", u.ColorYellow, "Received Signal - cancelsorder:",
+			cancelSOrderSignal, u.ColorReset)
 
 		// update workflow variable value
 		sorder.Schedule.Active = false
@@ -161,7 +161,7 @@ func StandingOrderWorkflow(ctx workflow.Context, pdetails mt.PaymentDetails, psc
 	amended := false
 	for sorder.Schedule.Active {
 
-		logger.Info(ColorGreen, "S/O-Workflow:", ColorReset, "Waiting for next Scheduled Payment (", sorder.Schedule.PeriodDuration, ")..")
+		logger.Info(u.ColorGreen, "S/O-Workflow:", u.ColorReset, "Waiting for next Scheduled Payment (", sorder.Schedule.PeriodDuration, ")..")
 
 		// Sleep for time but interrupt if cancel signal comes in:
 		workflow.AwaitWithTimeout(ctx, sorder.Schedule.PeriodDuration, selector.HasPending)
@@ -175,16 +175,16 @@ func StandingOrderWorkflow(ctx workflow.Context, pdetails mt.PaymentDetails, psc
 			}
 		}
 		if !sorder.Schedule.Active {
-			logger.Info(ColorGreen, "S/O-Workflow:", ColorReset, "Was Cancelled.")
-			_ = utils.UpcertSearchAttribute(ctx, "CustomStringField", "CANCELLED-SORDER")
+			logger.Info(u.ColorGreen, "S/O-Workflow:", u.ColorReset, "Was Cancelled.")
+			_ = u.UpcertSearchAttribute(ctx, "CustomStringField", "CANCELLED-SORDER")
 
 		} else if amended {
-			logger.Info(ColorGreen, "S/O-Workflow:", ColorReset, "Standing Order has been amended:", sorder.Details)
+			logger.Info(u.ColorGreen, "S/O-Workflow:", u.ColorReset, "Standing Order has been amended:", sorder.Details)
 			amended = false
 
 		} else {
 			// Standing Order still Active (/not Cancelled)
-			logger.Info(ColorGreen, "S/O-Workflow:", ColorReset, "Performing scheduled payment:", sorder.Details)
+			logger.Info(u.ColorGreen, "S/O-Workflow:", u.ColorReset, "Performing scheduled payment:", sorder.Details)
 
 			// Call Transfer workflow as a child workflow to implement the payment
 			// note: child workflow can be fullfilled by different taskqueue / registered worker
@@ -195,7 +195,7 @@ func StandingOrderWorkflow(ctx workflow.Context, pdetails mt.PaymentDetails, psc
 			})
 			var thisid int
 			encodedRandom.Get(&thisid)
-			logger.Info(ColorGreen, "S/O-Workflow:", ColorReset, "ChildWorkflow:", fmt.Sprintf("go-txfr-sorder-payment-%d", thisid))
+			logger.Info(u.ColorGreen, "S/O-Workflow:", u.ColorReset, "ChildWorkflow:", fmt.Sprintf("go-txfr-sorder-payment-%d", thisid))
 
 			cwo := workflow.ChildWorkflowOptions{
 				WorkflowID: fmt.Sprintf("go-txfr-sorder-payment-%d", thisid),
@@ -209,21 +209,21 @@ func StandingOrderWorkflow(ctx workflow.Context, pdetails mt.PaymentDetails, psc
 			err := workflow.ExecuteChildWorkflow(ctx, mt.TransferWorkflow, sorder.Details, delay).Get(ctx, &result)
 
 			if err != nil {
-				logger.Error(ColorGreen, "S/O-Workflow:", ColorRed, "Child workflow Transfer failed!", ColorReset, err)
+				logger.Error(u.ColorGreen, "S/O-Workflow:", u.ColorRed, "Child workflow Transfer failed!", u.ColorReset, err)
 				// do some failed sorder Activity.. email notification etc..
 				sorder.Schedule.Active = false
-				_ = utils.UpcertSearchAttribute(ctx, "CustomStringField", "FAILED-SORDER")
+				_ = u.UpcertSearchAttribute(ctx, "CustomStringField", "FAILED-SORDER")
 
 				// ToDo: Call a sorder notification activity here..
-				logger.Info(ColorGreen, "S/O-Workflow:", ColorRed, "Scheduled payment:", sorder.Details, "Completed with Error,", ColorReset, err)
+				logger.Info(u.ColorGreen, "S/O-Workflow:", u.ColorRed, "Scheduled payment:", sorder.Details, "Completed with Error,", u.ColorReset, err)
 
 			} else {
 				// This Transfer is complete, no more work to do this period
-				logger.Info(ColorGreen, "S/O-Workflow:", ColorReset, "Scheduled payment:", sorder.Details, "Completed with result:", result)
+				logger.Info(u.ColorGreen, "S/O-Workflow:", u.ColorReset, "Scheduled payment:", sorder.Details, "Completed with result:", result)
 			}
 		}
 	}
 
-	logger.Info(ColorGreen, "S/O-Workflow:", ColorReset, "Complete", "-", workflow.GetInfo(ctx).WorkflowExecution.ID)
+	logger.Info(u.ColorGreen, "S/O-Workflow:", u.ColorReset, "Complete", "-", workflow.GetInfo(ctx).WorkflowExecution.ID)
 	return "Workflow Completed.", nil
 }

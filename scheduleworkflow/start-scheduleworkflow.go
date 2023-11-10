@@ -6,19 +6,19 @@ import (
 	"log"
 	"math/rand"
 
-	"webapp/utils"
-
 	"go.temporal.io/sdk/client"
+
+	u "webapp/utils"
 )
 
 func StartScheduleWorkflow(sd ScheduleDetails) (starterr error) {
 
 	thisid := fmt.Sprint(rand.Intn(99999))
-	log.Printf("StartScheduleWorkflow-%s: %scalled, email: %s, description: %s, minutes: %d%s\n", thisid, ColorYellow, sd.Email, sd.Description, sd.Minutes, ColorReset)
+	log.Printf("StartScheduleWorkflow-%s: %scalled, email: %s, description: %s, minutes: %d%s\n", thisid, u.ColorYellow, sd.Email, sd.Description, sd.Minutes, u.ColorReset)
 
 	ctx := context.Background()
 
-	clientOptions, err := utils.LoadClientOptions()
+	clientOptions, err := u.LoadClientOptions()
 	if err != nil {
 		log.Fatalf("StartScheduleWorkflow-%s: Failed to load Temporal Cloud environment, err: %v", thisid, err)
 	}
@@ -53,7 +53,7 @@ func StartScheduleWorkflow(sd ScheduleDetails) (starterr error) {
 	}
 
 	// Update the schedule with a spec to run periodically,
-	log.Printf("StartScheduleWorkflow-%s: %sUpdating schedule, ScheduleID: %s to run %d minutes past the hour%s\n", thisid, ColorYellow, scheduleHandle.GetID(), sd.Minutes, ColorReset)
+	log.Printf("StartScheduleWorkflow-%s: %sUpdating schedule, ScheduleID: %s to run %d minutes past the hour%s\n", thisid, u.ColorYellow, scheduleHandle.GetID(), sd.Minutes, u.ColorReset)
 
 	err = scheduleHandle.Update(ctx, client.ScheduleUpdateOptions{
 		DoUpdate: func(schedule client.ScheduleUpdateInput) (*client.ScheduleUpdate, error) {
@@ -133,7 +133,7 @@ func StartScheduleWorkflow(sd ScheduleDetails) (starterr error) {
 	}
 
 	// Unpause schedule (as created State.Paused initially)
-	log.Printf("StartScheduleWorkflow-%s: %sUnpausing schedule, ScheduleID: %s%s\n", thisid, ColorYellow, scheduleHandle.GetID(), ColorReset)
+	log.Printf("StartScheduleWorkflow-%s: %sUnpausing schedule, ScheduleID: %s%s\n", thisid, u.ColorYellow, scheduleHandle.GetID(), u.ColorReset)
 
 	err = scheduleHandle.Unpause(ctx, client.ScheduleUnpauseOptions{})
 	if err != nil {

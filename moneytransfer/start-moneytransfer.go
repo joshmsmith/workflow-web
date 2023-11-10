@@ -7,9 +7,10 @@ import (
 	"log"
 	"math/rand"
 	"strconv"
-	"webapp/utils"
 
 	"go.temporal.io/sdk/client"
+
+	u "webapp/utils"
 )
 
 /*
@@ -31,7 +32,7 @@ func StartMoneyTransfer(pmnt *PaymentDetails) (wfinfo *WorkflowInfo, starterr er
 	}
 
 	// Load the Temporal Cloud from env
-	clientOptions, err := utils.LoadClientOptions()
+	clientOptions, err := u.LoadClientOptions()
 	if err != nil {
 		log.Printf("StartMoneyTransfer-%s: Failed to load Temporal Cloud environment: %v", thisid, err)
 		wfinfo.Info = err.Error()
@@ -73,7 +74,7 @@ func StartMoneyTransfer(pmnt *PaymentDetails) (wfinfo *WorkflowInfo, starterr er
 	wfinfo.WorkflowID = we.GetID()
 	wfinfo.RunID = we.GetRunID()
 	log.Printf("StartMoneyTransfer-%s: %sStarted workflow: WorkflowID: %s, RunID: %s%s",
-		thisid, ColorYellow, wfinfo.WorkflowID, wfinfo.RunID, ColorReset)
+		thisid, u.ColorYellow, wfinfo.WorkflowID, wfinfo.RunID, u.ColorReset)
 
 	// Check workflow status
 	var result string
@@ -81,7 +82,7 @@ func StartMoneyTransfer(pmnt *PaymentDetails) (wfinfo *WorkflowInfo, starterr er
 	err = we.Get(context.Background(), &result)
 
 	if err != nil {
-		log.Printf("StartMoneyTransfer-%s: %sWorkflow returned failure:%s %v", thisid, ColorRed, ColorReset, err)
+		log.Printf("StartMoneyTransfer-%s: %sWorkflow returned failure:%s %v", thisid, u.ColorRed, u.ColorReset, err)
 		wfinfo.Info = err.Error()
 		return wfinfo, err
 	}
@@ -92,7 +93,7 @@ func StartMoneyTransfer(pmnt *PaymentDetails) (wfinfo *WorkflowInfo, starterr er
 		wfinfo.Info = err.Error()
 		return wfinfo, err
 	}
-	log.Printf("StartMoneyTransfer-%s: %sWorkflow result: %s%s", thisid, ColorYellow, string(data), ColorReset)
+	log.Printf("StartMoneyTransfer-%s: %sWorkflow result: %s%s", thisid, u.ColorYellow, string(data), u.ColorReset)
 	wfinfo.Info = trimQuotes(string(data))
 	wfinfo.Status = "COMPLETED"
 

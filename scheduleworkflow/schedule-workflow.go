@@ -5,12 +5,14 @@ import (
 
 	"go.temporal.io/sdk/converter"
 	"go.temporal.io/sdk/workflow"
+
+  u "webapp/utils"
 )
 
 func ScheduleWorkflow(ctx workflow.Context, sd ScheduleDetails) error {
 
 	logger := workflow.GetLogger(ctx)
-	logger.Info(ColorGreen, "ScheduleWorkflow:", ColorReset, "Started - StartTime:", workflow.Now(ctx), "-", workflow.GetInfo(ctx).WorkflowExecution.ID)
+	logger.Info(u.ColorGreen, "ScheduleWorkflow:", u.ColorReset, "Started - StartTime:", workflow.Now(ctx), "-", workflow.GetInfo(ctx).WorkflowExecution.ID)
 
 	ao := workflow.ActivityOptions{
 		StartToCloseTimeout: 10 * time.Second,
@@ -39,11 +41,11 @@ func ScheduleWorkflow(ctx workflow.Context, sd ScheduleDetails) error {
 	err = workflow.ExecuteActivity(ctx2, ScheduleEmail, scheduledByID, startTime, sd).Get(ctx, nil)
 
 	if err != nil {
-		logger.Error(ColorGreen, "ScheduleWorkflow:", ColorReset, "ExecuteActivity failed.", ColorReset, "Error", err)
+		logger.Error(u.ColorGreen, "ScheduleWorkflow:", u.ColorReset, "ExecuteActivity failed.", u.ColorReset, "Error", err)
 		return err
 	}
 
-	logger.Info(ColorGreen, "ScheduleWorkflow:", ColorReset, "Complete", "-", workflow.GetInfo(ctx).WorkflowExecution.ID)
+	logger.Info(u.ColorGreen, "ScheduleWorkflow:", u.ColorReset, "Complete", "-", workflow.GetInfo(ctx).WorkflowExecution.ID)
 
 	return nil
 }

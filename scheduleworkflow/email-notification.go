@@ -10,12 +10,12 @@ import (
 
 	mail "github.com/xhit/go-simple-mail/v2"
 	"go.temporal.io/sdk/client"
-  "webapp/utils"
+  u "webapp/utils"
 )
 
 func SendEmailNotification(ctx context.Context, processStage int, sd ScheduleDetails) error {
 
-	log.Printf("%sSendEmailNotification:%s ScheduleID: %s, email: %s\n", ColorGreen, ColorReset, sd.Id, sd.Email)
+	log.Printf("%sSendEmailNotification:%s ScheduleID: %s, email: %s\n", u.ColorGreen, u.ColorReset, sd.Id, sd.Email)
 
 	var emailTemplate, emailSubject string
 
@@ -33,25 +33,25 @@ func SendEmailNotification(ctx context.Context, processStage int, sd ScheduleDet
 		emailSubject = EmailNotificationStageCompleteSubject
 
 	}
-	log.Printf("%sSendEmailNotification:%s email: %s, subject: %s", ColorGreen, ColorReset, sd.Email, emailSubject)
+	log.Printf("%sSendEmailNotification:%s email: %s, subject: %s", u.ColorGreen, u.ColorReset, sd.Email, emailSubject)
 
 	// Schedule Details may have changed since passed to workflow at creation
-	clientOptions, err := utils.LoadClientOptions()
+	clientOptions, err := u.LoadClientOptions()
 	if err != nil {
-		log.Fatalf("%sSendEmailNotification:%s Failed to load Temporal Cloud environment:%s %v\n", ColorGreen, ColorRed, ColorReset, err)
+		log.Fatalf("%sSendEmailNotification:%s Failed to load Temporal Cloud environment:%s %v\n", u.ColorGreen, u.ColorRed, u.ColorReset, err)
 	}
 	c, err := client.Dial(clientOptions)
 	if err != nil {
-		log.Fatalf("%sSendEmailNotification:%s Unable to create client,%s %v\n", ColorGreen, ColorRed, ColorReset, err)
+		log.Fatalf("%sSendEmailNotification:%s Unable to create client,%s %v\n", u.ColorGreen, u.ColorRed, u.ColorReset, err)
 	}
 	defer c.Close()
 
-	log.Printf("%sSendEmailNotification:%s Checking scheduleID: %s values -\n", ColorGreen, ColorReset, sd.Id)
+	log.Printf("%sSendEmailNotification:%s Checking scheduleID: %s values -\n", u.ColorGreen, u.ColorReset, sd.Id)
 	//ctx := context.Background()
 	scheduleHandle := c.ScheduleClient().GetHandle(ctx, sd.Id)
 	description, err := scheduleHandle.Describe(ctx)
 	if err != nil {
-		log.Printf("%sSendEmailNotification:%s Failed to get scheduleHandle.Describe, %s %v\n", ColorGreen, ColorRed, ColorReset, err)
+		log.Printf("%sSendEmailNotification:%s Failed to get scheduleHandle.Describe, %s %v\n", u.ColorGreen, u.ColorRed, u.ColorReset, err)
 	}
 	sd.Description = description.Schedule.Spec.Calendars[0].Comment
 	sd.Minutes = description.Schedule.Spec.Calendars[0].Minute[0].Start
@@ -60,7 +60,7 @@ func SendEmailNotification(ctx context.Context, processStage int, sd ScheduleDet
 	//var htmlContentTemplate = template.Must(template.New(emailTemplate).Parse(emailTemplate))
 	htmlContentTemplate, err := template.ParseFiles(emailTemplate)
 	if err != nil {
-		log.Printf("%sSendEmailNotification:%s Failed to Parse template file,%s %v", ColorGreen, ColorRed, ColorReset, err)
+		log.Printf("%sSendEmailNotification:%s Failed to Parse template file,%s %v", u.ColorGreen, u.ColorRed, u.ColorReset, err)
 		return err
 	}
 
@@ -69,7 +69,7 @@ func SendEmailNotification(ctx context.Context, processStage int, sd ScheduleDet
 
 	err = htmlContentTemplate.Execute(&htmlContent, sd)
 	if err != nil {
-		log.Printf("%sSendEmailNotification:%s Failed to Execute template,%s %v", ColorGreen, ColorRed, ColorReset, err)
+		log.Printf("%sSendEmailNotification:%s Failed to Execute template,%s %v", u.ColorGreen, u.ColorRed, u.ColorReset, err)
 		return err
 	}
 

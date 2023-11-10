@@ -10,9 +10,9 @@ import (
   _ "github.com/go-sql-driver/mysql"
   "github.com/jasonlvhit/gocron"
 
-  "webapp/utils"
+  u "webapp/utils"
 
-  "webapp/moneytransfer"
+  mt "webapp/moneytransfer"
 )
 
 type Transfer struct {
@@ -53,48 +53,48 @@ func CheckTransferQueueTask() {
   log.Println("CheckTransferQueueTask: Transfer:", *txfr)
 
   // Populate PaymentDetails object from tranfer task entry
-  pmnt := &moneytransfer.PaymentDetails{
+  pmnt := &mt.PaymentDetails{
     SourceAccount: txfr.Origin,
     TargetAccount: txfr.Destination,
     ReferenceID:   txfr.Reference,
     Amount:        int(txfr.Amount),
   }
-  log.Printf("CheckTransferQueueTask: %sPaymentDetails: %v%s", utils.ColorYellow, *pmnt, utils.ColorReset)
+  log.Printf("CheckTransferQueueTask: %sPaymentDetails: %v%s", u.ColorYellow, *pmnt, u.ColorReset)
 
   // Call StartMoneyTransfer to start the workflow..
-  wfinfo, wferr := moneytransfer.StartMoneyTransfer(pmnt)
+  wfinfo, wferr := mt.StartMoneyTransfer(pmnt)
   wfinfo.Id = txfr.Id
   if wferr != nil {
     wfinfo.Status = "FAILED"
     if strings.Contains(wferr.Error(), "Insufficient Funds") {
-			log.Printf("CheckTransferQueueTask: %sOrigin Account has Insufficient Funds%s", utils.ColorRed, utils.ColorReset)
+			log.Printf("CheckTransferQueueTask: %sOrigin Account has Insufficient Funds%s", u.ColorRed, u.ColorReset)
 			wfinfo.Info = "Origin Account has Insufficient Funds"
 
     } else if strings.Contains(wferr.Error(), "InvalidAccountError") {
       if strings.Contains(wferr.Error(), "Withdraw") {
-        log.Printf("CheckTransferQueueTask: %sOrigin Account Invalid%s", utils.ColorRed, utils.ColorReset)
+        log.Printf("CheckTransferQueueTask: %sOrigin Account Invalid%s", u.ColorRed, u.ColorReset)
         wfinfo.Info = "Origin Account is Invalid"
       } else if strings.Contains(wferr.Error(), "Deposit") {
-        log.Printf("CheckTransferQueueTask: %sDestination Account Invalid, Origin Account Refunded%s", utils.ColorRed, utils.ColorReset)
+        log.Printf("CheckTransferQueueTask: %sDestination Account Invalid, Origin Account Refunded%s", u.ColorRed, u.ColorReset)
         wfinfo.Info = "Destination Account is Invalid, Origin Account Refunded"
       } else {
-        log.Printf("CheckTransferQueueTask: %sAccount Invalid%s", utils.ColorRed, utils.ColorReset)
+        log.Printf("CheckTransferQueueTask: %sAccount Invalid%s", u.ColorRed, u.ColorReset)
         wfinfo.Info = "Invalid Account Error"
       }
     } else {
-      log.Printf("CheckTransferQueueTask: %sWorkflow returned error: %v%s", utils.ColorRed, wferr, utils.ColorReset)
+      log.Printf("CheckTransferQueueTask: %sWorkflow returned error: %v%s", u.ColorRed, wferr, u.ColorReset)
     }
 
     // Update db entry as FAILED
     _ = UpdateTransferRequest(wfinfo)
-    log.Printf("CheckTransferQueueTask: %sWorkflow: %s Failed%s", utils.ColorRed, wfinfo.WorkflowID, utils.ColorReset)
+    log.Printf("CheckTransferQueueTask: %sWorkflow: %s Failed%s", u.ColorRed, wfinfo.WorkflowID, u.ColorReset)
 
   } else {
 
     // Update db entry as COMPLETED
     wfinfo.Status = "COMPLETED"
     _ = UpdateTransferRequest(wfinfo)
-    log.Printf("CheckTransferQueueTask: %sWorkflow: %s Completed%s", utils.ColorYellow, wfinfo.WorkflowID, utils.ColorReset)
+    log.Printf("CheckTransferQueueTask: %sWorkflow: %s Completed%s", u.ColorYellow, wfinfo.WorkflowID, u.ColorReset)
   }
 
   return
@@ -116,7 +116,7 @@ func QueryTransferRequest () (*Transfer, error) {
   log.Println("QueryTransferRequest: called")
 
   // Get database connection
-  dbc, _ := utils.GetDBConnection()
+  dbc, _ := u.GetDBConnection()
   defer dbc.Close()
 
   sqlStatement := `set @updatedid:=NULL; update moneytransfer.transfer set status="PROCESSING", id=(@updatedid:=id) where status='REQUESTED' order by id limit 1; select id,origin,destination,amount,reference,status from moneytransfer.transfer where id = @updatedid;`
@@ -150,12 +150,12 @@ func QueryTransferRequest () (*Transfer, error) {
  *
  * called from: CheckTransferQueueTask
  */
-func UpdateTransferRequest (wfinfo *moneytransfer.WorkflowInfo) error {
+func UpdateTransferRequest (wfinfo *mt.WorkflowInfo) error {
 
   log.Println("UpdateTransferRequest: called (Id:", wfinfo.Id, wfinfo.Status, ")")
 
   // Get database connection
-  dbc, _ := utils.GetDBConnection()
+  dbc, _ := u.GetDBConnection()
   defer dbc.Close()
 
   sqlStatement := fmt.Sprintf("update moneytransfer.transfer set status='%s',t_wkfl_id='%s',t_run_id='%s',t_taskqueue='%s',t_info='%s' where id=%d", wfinfo.Status, wfinfo.WorkflowID, wfinfo.RunID, wfinfo.TaskQueue, wfinfo.Info, wfinfo.Id)

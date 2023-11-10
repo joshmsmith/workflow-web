@@ -9,14 +9,14 @@ import (
 	"go.temporal.io/sdk/worker"
 
 	mt "webapp/moneytransfer"
-	"webapp/utils"
+	u "webapp/utils"
 )
 
 func main() {
-	log.Printf("%sGo worker starting..%s", mt.ColorGreen, mt.ColorReset)
+	log.Printf("%sGo worker starting..%s", u.ColorGreen, u.ColorReset)
 
 	// Load the Temporal Cloud from env
-	clientOptions, err := utils.LoadClientOptions()
+	clientOptions, err := u.LoadClientOptions()
 	if err != nil {
 		log.Fatalf("Failed to load Temporal Cloud environment: %v", err)
 	}
@@ -51,11 +51,11 @@ func main() {
 	w.RegisterActivity(mt.Refund)
 
 	// Start listening to the Task Queue.
-	log.Printf("%sGo worker listening on %s task queue..%s", mt.ColorGreen, taskqueuename, mt.ColorReset)
+	log.Printf("%sGo worker listening on %s task queue..%s", u.ColorGreen, taskqueuename, u.ColorReset)
 	err = w.Run(worker.InterruptCh())
 	if err != nil {
 		log.Fatalln("Unable to start MoneyTransfer Worker", err)
 	}
 
-	log.Printf("%sGo worker stopped.%s", mt.ColorGreen, mt.ColorReset)
+	log.Printf("%sGo worker stopped.%s", u.ColorGreen, u.ColorReset)
 }

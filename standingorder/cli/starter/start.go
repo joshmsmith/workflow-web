@@ -11,7 +11,7 @@ import (
 
 	mt "webapp/moneytransfer"
 	so "webapp/standingorder"
-	"webapp/utils"
+	u "webapp/utils"
 )
 
 func main() {
@@ -19,7 +19,7 @@ func main() {
 	log.Println("workflow start program..")
 
 	// Load the Temporal Cloud from env
-	clientOptions, err := utils.LoadClientOptions()
+	clientOptions, err := u.LoadClientOptions()
 	if err != nil {
 		log.Fatalf("Failed to load Temporal Cloud environment: %v", err)
 	}
@@ -54,5 +54,5 @@ func main() {
 	if err != nil {
 		log.Fatalln("Unable to execute workflow", err)
 	}
-	log.Printf("%sWorkflow started:%s (WorkflowID: %s, RunID: %s)", so.ColorYellow, so.ColorReset, we.GetID(), we.GetRunID())
+	log.Printf("%sWorkflow started:%s (WorkflowID: %s, RunID: %s)", u.ColorYellow, u.ColorReset, we.GetID(), we.GetRunID())
 }

@@ -10,7 +10,7 @@ import (
 	"go.temporal.io/sdk/client"
 
 	mt "webapp/moneytransfer"
-	"webapp/utils"
+	u "webapp/utils"
 )
 
 /* Main */
@@ -19,7 +19,7 @@ func main() {
 	log.Println("workflow start program..")
 
 	// Load the Temporal Cloud from env
-	clientOptions, err := utils.LoadClientOptions()
+	clientOptions, err := u.LoadClientOptions()
 	if err != nil {
 		log.Fatalf("Failed to load Temporal Cloud environment: %v", err)
 	}
@@ -55,7 +55,7 @@ func main() {
 	if err != nil {
 		log.Fatalln("Unable to execute workflow", err)
 	}
-	log.Printf("%sWorkflow started:%s (WorkflowID: %s, RunID: %s)", mt.ColorYellow, mt.ColorReset, we.GetID(), we.GetRunID())
+	log.Printf("%sWorkflow started:%s (WorkflowID: %s, RunID: %s)", u.ColorYellow, u.ColorReset, we.GetID(), we.GetRunID())
 
 	// Check workflow status
 	var result string
@@ -70,7 +70,7 @@ func main() {
 	if err != nil {
 		log.Fatalln("Unable to format result in JSON format", err)
 	}
-	log.Printf("%sWorkflow result:%s %s", mt.ColorYellow, mt.ColorReset, string(data))
+	log.Printf("%sWorkflow result:%s %s", u.ColorYellow, u.ColorReset, string(data))
 
 	// done
 	log.Print("Start workflow client done.")

@@ -15,7 +15,7 @@ import (
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/converter"
 
-	"webapp/utils"
+	u "webapp/utils"
 )
 
 /*
@@ -26,7 +26,7 @@ func QueryMoneyTransfer(w http.ResponseWriter, wfinfo *WorkflowInfo) (err error)
 	log.Printf("QueryMoneyTransfers: called")
 
 	// Load the Temporal Cloud from env
-	clientOptions, err := utils.LoadClientOptions()
+	clientOptions, err := u.LoadClientOptions()
 	if err != nil {
 		log.Printf("QueryMoneyTransfer: Failed to load Temporal Cloud environment: %v", err)
 		return err
@@ -82,13 +82,13 @@ func QueryMoneyTransfer(w http.ResponseWriter, wfinfo *WorkflowInfo) (err error)
 		event_type := string(enumspb.EventType_name[event_type_num])
 		//task_id := int(c["task_id"].(float64))
 
-		fmt.Printf("%sWorkflow Event %d: %s%s\n", ColorGreen, event_type_num, event_type, ColorReset)
+		fmt.Printf("%sWorkflow Event %d: %s%s\n", u.ColorGreen, event_type_num, event_type, u.ColorReset)
 		fmt.Fprintln(w, "<h3>    Workflow Event: ", event_type, "</h3>")
 
 		switch event_type_num {
 		case enumspb.EventType_value["WorkflowExecutionStarted"]:
 			//fmt.Printf("case WorkflowExecutionStarted\n")
-			fmt.Printf("%sEvent Data: %v%s\n", ColorGreen, jsondatastr, ColorReset)
+			fmt.Printf("%sEvent Data: %v%s\n", u.ColorGreen, jsondatastr, u.ColorReset)
 			fmt.Fprintln(w, "<font color=blue>Event Data: ", jsondatastr, "</font><br>")
 
 			attributes := c["Attributes"].(map[string]interface{})["workflow_execution_started_event_attributes"]
@@ -97,22 +97,22 @@ func QueryMoneyTransfer(w http.ResponseWriter, wfinfo *WorkflowInfo) (err error)
 
 		case enumspb.EventType_value["WorkflowTaskScheduled"]:
 			//fmt.Printf("case WorkflowTaskScheduled\n")
-			fmt.Printf("%sEvent Data: %v%s\n", ColorGreen, jsondatastr, ColorReset)
+			fmt.Printf("%sEvent Data: %v%s\n", u.ColorGreen, jsondatastr, u.ColorReset)
 			fmt.Fprintln(w, "<font color=blue>Event Data: ", jsondatastr, "</font><br>")
 
 		case enumspb.EventType_value["WorkflowTaskStarted"]:
 			//fmt.Printf("case WorkflowTaskStarted\n")
-			fmt.Printf("%sEvent Data: %v%s\n", ColorGreen, jsondatastr, ColorReset)
+			fmt.Printf("%sEvent Data: %v%s\n", u.ColorGreen, jsondatastr, u.ColorReset)
 			fmt.Fprintln(w, "<font color=blue>Event Data: ", jsondatastr, "</font><br>")
 
 		case enumspb.EventType_value["WorkflowTaskCompleted"]:
 			//fmt.Printf("case WorkflowTaskCompleted\n")
-			fmt.Printf("%sEvent Data: %v%s\n", ColorGreen, jsondatastr, ColorReset)
+			fmt.Printf("%sEvent Data: %v%s\n", u.ColorGreen, jsondatastr, u.ColorReset)
 			fmt.Fprintln(w, "<font color=blue>Event Data: ", jsondatastr, "</font><br>")
 
 		case enumspb.EventType_value["UpsertWorkflowSearchAttributes"]:
 			//fmt.Printf("case UpsertWorkflowSearchAttributes\n")
-			fmt.Printf("%sEvent Data: %v%s\n", ColorGreen, jsondatastr, ColorReset)
+			fmt.Printf("%sEvent Data: %v%s\n", u.ColorGreen, jsondatastr, u.ColorReset)
 			fmt.Fprintln(w, "<font color=blue>Event Data: ", jsondatastr, "</font><br>")
 
 			attributes := c["Attributes"].(map[string]interface{})["upsert_workflow_search_attributes_event_attributes"]
@@ -123,7 +123,7 @@ func QueryMoneyTransfer(w http.ResponseWriter, wfinfo *WorkflowInfo) (err error)
 
 		case enumspb.EventType_value["ActivityTaskScheduled"]:
 			//fmt.Printf("case ActivityTaskScheduled\n")
-			fmt.Printf("%sEvent Data: %v%s\n", ColorGreen, jsondatastr, ColorReset)
+			fmt.Printf("%sEvent Data: %v%s\n", u.ColorGreen, jsondatastr, u.ColorReset)
 			fmt.Fprintln(w, "<font color=blue>Event Data: ", jsondatastr, "</font><br>")
 
 			attributes := c["Attributes"].(map[string]interface{})["activity_task_scheduled_event_attributes"]
@@ -134,22 +134,22 @@ func QueryMoneyTransfer(w http.ResponseWriter, wfinfo *WorkflowInfo) (err error)
 
 		case enumspb.EventType_value["ActivityTaskStarted"]:
 			//fmt.Printf("case ActivityTaskStarted\n")
-			fmt.Printf("%sEvent Data: %v%s\n", ColorGreen, jsondatastr, ColorReset)
+			fmt.Printf("%sEvent Data: %v%s\n", u.ColorGreen, jsondatastr, u.ColorReset)
 			fmt.Fprintln(w, "<font color=blue>Event Data: ", jsondatastr, "</font><br>")
 
 		case enumspb.EventType_value["ActivityTaskCompleted"]:
 			//fmt.Printf("case ActivityTaskCompleted\n")
-			fmt.Printf("%sEvent Data: %v%s\n", ColorGreen, jsondatastr, ColorReset)
+			fmt.Printf("%sEvent Data: %v%s\n", u.ColorGreen, jsondatastr, u.ColorReset)
 			fmt.Fprintln(w, "<font color=blue>Event Data: ", jsondatastr, "</font><br>")
 
 		case enumspb.EventType_value["ActivityTaskFailed"]:
 			//fmt.Printf("case ActivityTaskFailed\n")
-			fmt.Printf("%sEvent Data: %v%s\n", ColorGreen, jsondatastr, ColorReset)
+			fmt.Printf("%sEvent Data: %v%s\n", u.ColorGreen, jsondatastr, u.ColorReset)
 			fmt.Fprintln(w, "<font color=blue>Event Data: ", jsondatastr, "</font><br>")
 
 		case enumspb.EventType_value["TimerStarted"]:
 			//fmt.Printf("case TimerStarted\n")
-			fmt.Printf("%sEvent Data: %v%s\n", ColorGreen, jsondatastr, ColorReset)
+			fmt.Printf("%sEvent Data: %v%s\n", u.ColorGreen, jsondatastr, u.ColorReset)
 			fmt.Fprintln(w, "<font color=blue>Event Data: ", jsondatastr, "</font><br>")
 
 			attributes := c["Attributes"].(map[string]interface{})["timer_started_event_attributes"]
@@ -158,7 +158,7 @@ func QueryMoneyTransfer(w http.ResponseWriter, wfinfo *WorkflowInfo) (err error)
 
 		case enumspb.EventType_value["TimerFired"]:
 			//fmt.Printf("case TimerFired\n")
-			fmt.Printf("%sEvent Data: %v%s\n", ColorGreen, jsondatastr, ColorReset)
+			fmt.Printf("%sEvent Data: %v%s\n", u.ColorGreen, jsondatastr, u.ColorReset)
 			fmt.Fprintln(w, "<font color=blue>Event Data: ", jsondatastr, "</font><br>")
 
 			attributes := c["Attributes"].(map[string]interface{})["timer_fired_event_attributes"]
@@ -167,7 +167,7 @@ func QueryMoneyTransfer(w http.ResponseWriter, wfinfo *WorkflowInfo) (err error)
 
 		case enumspb.EventType_value["WorkflowExecutionCompleted"]:
 			//fmt.Printf("case WorkflowExecutionCompleted\n")
-			fmt.Printf("%sEvent Data: %v%s\n", ColorGreen, jsondatastr, ColorReset)
+			fmt.Printf("%sEvent Data: %v%s\n", u.ColorGreen, jsondatastr, u.ColorReset)
 			fmt.Fprintln(w, "<font color=blue>Event Data: ", jsondatastr, "</font><br>")
 
 			attributes := c["Attributes"].(map[string]interface{})["workflow_execution_completed_event_attributes"]
@@ -176,7 +176,7 @@ func QueryMoneyTransfer(w http.ResponseWriter, wfinfo *WorkflowInfo) (err error)
 
 		case enumspb.EventType_value["WorkflowExecutionFailed"]:
 			//fmt.Printf("case WorkflowExecutionFailed\n")
-			fmt.Printf("%sEvent Data: %v%s\n", ColorGreen, jsondatastr, ColorReset)
+			fmt.Printf("%sEvent Data: %v%s\n", u.ColorGreen, jsondatastr, u.ColorReset)
 			fmt.Fprintln(w, "<font color=blue>Event Data: ", jsondatastr, "</font><br>")
 
 			attributes := c["Attributes"].(map[string]interface{})["workflow_execution_failed_event_attributes"]

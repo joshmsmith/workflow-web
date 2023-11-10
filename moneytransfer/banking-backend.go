@@ -7,7 +7,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 
-	"webapp/utils"
+	u "webapp/utils"
 )
 
 // DB: account_id account_number account_name account_balance datestamp
@@ -25,7 +25,7 @@ func ReadDbAccounts() DbAccounts {
 	//log.Println("ReadAccounts: called")
 
 	// Get database connection
-	dbc, _ := utils.GetDBConnection()
+	dbc, _ := u.GetDBConnection()
 	defer dbc.Close()
 
 	sqlStatement := `SELECT account_id, account_number, account_name, account_balance FROM dataentry.accounts`
@@ -56,7 +56,7 @@ func checkBankService() bool {
 	var bankAPIStatus int = 10
 
 	// Get database connection
-	dbc, _ := utils.GetDBConnection()
+	dbc, _ := u.GetDBConnection()
 	defer dbc.Close()
 
 	sqlStatement := `SELECT up FROM dataentry.bankapistatus`
@@ -75,7 +75,7 @@ func checkBankService() bool {
 	}
 
 	if bankAPIStatus != 1 {
-		log.Printf("%scheckBankService: Bank service API is DOWN (status: %d)%s", ColorCyan, bankAPIStatus, ColorReset)
+		log.Printf("%scheckBankService: Bank service API is DOWN (status: %d)%s", u.ColorCyan, bankAPIStatus, u.ColorReset)
 		return bool(false)
 	}
 	return bool(true)

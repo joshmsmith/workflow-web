@@ -3,10 +3,11 @@ package moneytransfer
 import (
 	"fmt"
 	"time"
-	"webapp/utils"
 
 	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
+
+	u "webapp/utils"
 )
 
 /* Transfer Workflow */
@@ -14,7 +15,7 @@ func TransferWorkflow(ctx workflow.Context, input PaymentDetails, delay int) (st
 
 	// Define workflow logger (avoid repeating messages on replay etc)
 	logger := workflow.GetLogger(ctx)
-	logger.Info(ColorGreen, "Transfer-Workflow:", ColorReset, "Started", "-", workflow.GetInfo(ctx).WorkflowExecution.ID)
+	logger.Info(u.ColorGreen, "Transfer-Workflow:", u.ColorReset, "Started", "-", workflow.GetInfo(ctx).WorkflowExecution.ID)
 
 	// RetryPolicy specifies how to automatically handle retries if an Activity fails.
 	activityretrypolicy := &temporal.RetryPolicy{
@@ -34,7 +35,7 @@ func TransferWorkflow(ctx workflow.Context, input PaymentDetails, delay int) (st
 	ctx = workflow.WithActivityOptions(ctx, activityoptions)
 
 	// Set search attribute status to PROCESSING
-	_ = utils.UpcertSearchAttribute(ctx, "CustomStringField", "PROCESSING")
+	_ = u.UpcertSearchAttribute(ctx, "CustomStringField", "PROCESSING")
 
 	/* Withdraw money Activity - (blocks until completion with .Get function) */
 	var withdrawOutput string
@@ -43,14 +44,14 @@ func TransferWorkflow(ctx workflow.Context, input PaymentDetails, delay int) (st
 
 	if withdrawErr != nil {
 		// Set search attribute status to FAILED
-		_ = utils.UpcertSearchAttribute(ctx, "CustomStringField", "FAILED")
-		logger.Info(ColorGreen, "Transfer-Workflow:", ColorReset, "Complete.", ColorRed, "(Withdraw Failed)", ColorReset)
+		_ = u.UpcertSearchAttribute(ctx, "CustomStringField", "FAILED")
+		logger.Info(u.ColorGreen, "Transfer-Workflow:", u.ColorReset, "Complete.", u.ColorRed, "(Withdraw Failed)", u.ColorReset)
 		return "", fmt.Errorf("Withdraw: failed to withdraw funds from: %v, %w", input.SourceAccount, withdrawErr)
 	}
 
 	// For demo - sleep between activities
 	logger.Debug("Transfer-Workflow: (DEBUG) Sleeping between activity calls -")
-	logger.Info(ColorGreen, "Transfer-Workflow:", ColorBlue, "workflow.Sleep duration", delay, "seconds", ColorReset)
+	logger.Info(u.ColorGreen, "Transfer-Workflow:", u.ColorBlue, "workflow.Sleep duration", delay, "seconds", u.ColorReset)
 	workflow.Sleep(ctx, time.Duration(delay)*time.Second)
 
 	/* Deposit money Activity - (blocks until completion with .Get function) */
@@ -62,19 +63,19 @@ func TransferWorkflow(ctx workflow.Context, input PaymentDetails, delay int) (st
 		// The deposit failed; put money back in original account.
 
 		// Set search attribute status to FAILED
-		_ = utils.UpcertSearchAttribute(ctx, "CustomStringField", "FAILED")
+		_ = u.UpcertSearchAttribute(ctx, "CustomStringField", "FAILED")
 
 		/* Refund money Activity */
 		var result string
 		refundErr := workflow.ExecuteActivity(ctx, Refund, input).Get(ctx, &result)
 
 		if refundErr != nil {
-			logger.Info(ColorGreen, "Transfer-Workflow:", ColorReset, "Complete.", ColorRed, "(Deposit & Refund Failed)", ColorReset)
+			logger.Info(u.ColorGreen, "Transfer-Workflow:", u.ColorReset, "Complete.", u.ColorRed, "(Deposit & Refund Failed)", u.ColorReset)
 			return "", fmt.Errorf("Refund: failed to Deposit funds to: %v, %w. Money could NOT be returned to %v: %w",
 				input.TargetAccount, depositErr, input.SourceAccount, refundErr)
 		}
 
-		logger.Info(ColorGreen, "Transfer-Workflow:", ColorReset, "Complete.", ColorRed, "(Deposit Failed)", ColorReset)
+		logger.Info(u.ColorGreen, "Transfer-Workflow:", u.ColorReset, "Complete.", u.ColorRed, "(Deposit Failed)", u.ColorReset)
 		return "", fmt.Errorf("Deposit: failed to deposit funds to: %v, Funds returned to: %v, %w",
 			input.TargetAccount, input.SourceAccount, depositErr)
 	}
@@ -83,9 +84,9 @@ func TransferWorkflow(ctx workflow.Context, input PaymentDetails, delay int) (st
 	result := fmt.Sprintf("Transfer complete (transaction IDs: Withdraw: %s, Deposit: %s)", withdrawOutput, depositOutput)
 
 	// Set search attribute status to COMPLETED
-	_ = utils.UpcertSearchAttribute(ctx, "CustomStringField", "COMPLETED")
+	_ = u.UpcertSearchAttribute(ctx, "CustomStringField", "COMPLETED")
 
-	logger.Info(ColorGreen, "Transfer-Workflow:", ColorReset, "Complete", "-", workflow.GetInfo(ctx).WorkflowExecution.ID)
+	logger.Info(u.ColorGreen, "Transfer-Workflow:", u.ColorReset, "Complete", "-", workflow.GetInfo(ctx).WorkflowExecution.ID)
 
 	return result, nil
 }

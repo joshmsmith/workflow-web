@@ -18,7 +18,7 @@ import (
 
 	mt "webapp/moneytransfer"
 	so "webapp/standingorder"
-	"webapp/utils"
+	u "webapp/utils"
 )
 
 /* Flat local struct to pass standing order data to template */
@@ -38,7 +38,7 @@ func ListSOrders(w http.ResponseWriter, r *http.Request) {
 
 	namespace := os.Getenv("TEMPORAL_NAMESPACE")
 
-	clientOptions, err := utils.LoadClientOptions()
+	clientOptions, err := u.LoadClientOptions()
 	if err != nil {
 		log.Fatalf("ListSOrders: Failed to load Temporal Cloud environment: %v", err)
 	}
@@ -93,7 +93,7 @@ func ListSOrders(w http.ResponseWriter, r *http.Request) {
 		nextPageToken = resp.NextPageToken
 	}
 
-	utils.Render(w, "templates/ListSOrders.html", sorders)
+	u.Render(w, "templates/ListSOrders.html", sorders)
 }
 
 /* NewSOrder */
@@ -103,7 +103,7 @@ func NewSOrder(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("NewSOrder: method:", r.Method) //get request method
 	if r.Method == "GET" {
-		utils.Render(w, "templates/NewSOrder.html", nil)
+		u.Render(w, "templates/NewSOrder.html", nil)
 		return
 	}
 
@@ -132,7 +132,7 @@ func NewSOrder(w http.ResponseWriter, r *http.Request) {
 	log.Println("NewSOrder: Submitting Temporal Workflow:", wkflowid)
 
 	// Load the Temporal Cloud from env
-	clientOptions, err := utils.LoadClientOptions()
+	clientOptions, err := u.LoadClientOptions()
 	if err != nil {
 		log.Fatalf("NewSOrder: Failed to load Temporal Cloud environment: %v", err)
 	}
@@ -154,10 +154,10 @@ func NewSOrder(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatalln("NewSOrder: Unable to execute workflow", err)
 	}
-	log.Printf("NewSOrder: %sWorkflow started:%s (WorkflowID: %s, RunID: %s)", so.ColorYellow, so.ColorReset, we.GetID(), we.GetRunID())
+	log.Printf("NewSOrder: %sWorkflow started:%s (WorkflowID: %s, RunID: %s)", u.ColorYellow, u.ColorReset, we.GetID(), we.GetRunID())
 
 	// Render acknowledgement page
-	utils.Render(w, "templates/NewSOrder.html", struct{ Success bool }{true})
+	u.Render(w, "templates/NewSOrder.html", struct{ Success bool }{true})
 }
 
 /* AmendSOrder */
@@ -178,7 +178,7 @@ func AmendSOrder(w http.ResponseWriter, r *http.Request) {
 	log.Println("AmendSOrder: method:", r.Method) //get request method
 
 	// Load the Temporal Cloud from env
-	clientOptions, err := utils.LoadClientOptions()
+	clientOptions, err := u.LoadClientOptions()
 	if err != nil {
 		log.Fatalf("AmendSOrder: Failed to load Temporal Cloud environment: %v", err)
 	}
@@ -256,7 +256,7 @@ func AmendSOrder(w http.ResponseWriter, r *http.Request) {
 
 		log.Println("AmendSOrder: Displaying Standing Order:", sorder)
 
-		utils.Render(w, "templates/AmendSOrder.html", sorder)
+		u.Render(w, "templates/AmendSOrder.html", sorder)
 
 	} else if r.Method == "POST" {
 
@@ -301,9 +301,9 @@ func AmendSOrder(w http.ResponseWriter, r *http.Request) {
 					log.Fatalln("AmendSOrder: Unable to signal workflow", err)
 				}
 			}
-			utils.Render(w, "templates/AmendSOrderPost.html", struct{ Success bool }{true})
+			u.Render(w, "templates/AmendSOrderPost.html", struct{ Success bool }{true})
 		} else {
-			utils.Render(w, "templates/AmendSOrderPost.html", struct{ Success bool }{false})
+			u.Render(w, "templates/AmendSOrderPost.html", struct{ Success bool }{false})
 		}
 	}
 }
@@ -328,7 +328,7 @@ func CancelSOrder(w http.ResponseWriter, r *http.Request) {
 	log.Println("CancelSOrder: Cancelling Standing Order:", wkflId)
 
 	// Load the Temporal Cloud from env
-	clientOptions, err := utils.LoadClientOptions()
+	clientOptions, err := u.LoadClientOptions()
 	if err != nil {
 		log.Fatalf("CancelSOrder: Failed to load Temporal Cloud environment: %v", err)
 	}
@@ -353,12 +353,12 @@ func CancelSOrder(w http.ResponseWriter, r *http.Request) {
 			log.Fatalln("CancelSOrder: Unable to signal workflow", err)
 		}
 
-		utils.Render(w, "templates/CancelSOrder.html", struct{ Success bool }{true})
+		u.Render(w, "templates/CancelSOrder.html", struct{ Success bool }{true})
 
 	} else {
 		log.Println("CancelSOrder: Standing Order not found/active:", wkflId)
 
-		utils.Render(w, "templates/CancelSOrder.html", struct{ Success bool }{false})
+		u.Render(w, "templates/CancelSOrder.html", struct{ Success bool }{false})
 	}
 }
 
