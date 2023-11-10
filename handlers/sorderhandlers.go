@@ -76,40 +76,7 @@ func ListSOrders(w http.ResponseWriter, r *http.Request) {
 			sorder.WorkflowID = exec.WorkflowId
 
 			// Query variables form workflow
-			resp, err := c.QueryWorkflow(context.Background(), sorder.WorkflowID, "", "payment.origin")
-			if err != nil {
-				log.Fatalln("ListSOrders: Unable to query workflow,", err)
-			} else {
-				var result interface{}
-				if err := resp.Get(&result); err != nil {
-					log.Fatalln("ListSOrders: Unable to decode query result,", err)
-				} else {
-					sorder.PaymentOrigin = fmt.Sprintf("%v", result)
-				}
-			}
-			resp, err = c.QueryWorkflow(context.Background(), sorder.WorkflowID, "", "payment.destination")
-			if err != nil {
-				log.Fatalln("ListSOrders: Unable to query workflow,", err)
-			} else {
-				var result interface{}
-				if err := resp.Get(&result); err != nil {
-					log.Fatalln("ListSOrders: Unable to decode query result,", err)
-				} else {
-					sorder.PaymentDestination = fmt.Sprintf("%v", result)
-				}
-			}
-			resp, err = c.QueryWorkflow(context.Background(), sorder.WorkflowID, "", "payment.amount")
-			if err != nil {
-				log.Fatalln("ListSOrders: Unable to query workflow,", err)
-			} else {
-				var result interface{}
-				if err := resp.Get(&result); err != nil {
-					log.Fatalln("ListSOrders: Unable to decode query result,", err)
-				} else {
-					sorder.PaymentAmount, _ = strconv.Atoi(fmt.Sprintf("%v", result))
-				}
-			}
-			resp, err = c.QueryWorkflow(context.Background(), sorder.WorkflowID, "", "payment.reference")
+			resp, err := c.QueryWorkflow(context.Background(), sorder.WorkflowID, "", "payment.reference")
 			if err != nil {
 				log.Fatalln("ListSOrders: Unable to query workflow,", err)
 			} else {
@@ -118,18 +85,6 @@ func ListSOrders(w http.ResponseWriter, r *http.Request) {
 					log.Fatalln("ListSOrders: Unable to decode query result,", err)
 				} else {
 					sorder.PaymentReference = fmt.Sprintf("%v", result)
-				}
-			}
-			resp, err = c.QueryWorkflow(context.Background(), sorder.WorkflowID, "", "schedule.periodduration")
-			if err != nil {
-				log.Fatalln("ListSOrders: Unable to query workflow,", err)
-			} else {
-				var result interface{}
-				if err := resp.Get(&result); err != nil {
-					log.Fatalln("ListSOrders: Unable to decode query result,", err)
-				} else {
-					d, _ := time.ParseDuration(fmt.Sprint(result))
-					sorder.SchedulePeriodDuration = int(d.Seconds())
 				}
 			}
 			log.Printf("ListSOrders:   Workflow Query Details: %v\n", sorder)

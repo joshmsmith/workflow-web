@@ -10,9 +10,6 @@
   <thead>
     <tr>
       <td>WorkflowID</td>
-      <td>Origin Account</td>
-      <td>Destination Account</td>
-      <td>Amount</td>
       <td>Reference</td>
       <td></td>
     </tr>
@@ -21,9 +18,6 @@
 {{ range . }}
     <tr>
       <td>{{ .WorkflowID }}</td>
-      <td>{{ .PaymentOrigin }}</td>
-      <td>{{ .PaymentDestination }}</td>
-      <td>{{ .PaymentAmount }}</td>
       <td>{{ .PaymentReference }}</td>
       <td><a href="/amendsorder?id={{ .WorkflowID }}"><button type="button" class="btn btn-primary btn-sm">Amend</button></a></td>
     </tr>
