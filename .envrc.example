@@ -4,6 +4,12 @@
 # region: us-east-1
 export TEMPORAL_HOST_URL="myns.abcdf.tmprl.cloud:7233"
 export TEMPORAL_NAMESPACE="myns.abcdf"
+#export TEMPORAL_HOST_URL="localhost:7233"
+#export TEMPORAL_NAMESPACE="workflow-web"
+
+# If self-hosted, skip TLS certs
+export USE_TLS=true
+#export USE_TLS=false
 
 # tclient-myns client cert
 export TEMPORAL_TLS_CERT="/Users/myuser/.temporal/tclient-myns.pem"

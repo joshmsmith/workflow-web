@@ -88,7 +88,7 @@ func StartScheduleWorkflow(sd ScheduleDetails) (starterr error) {
             //Hour []ScheduleRange
             Hour: []client.ScheduleRange{
               {
-                Start: 9,
+                Start: 0,
                 End:   23,
               },
             },

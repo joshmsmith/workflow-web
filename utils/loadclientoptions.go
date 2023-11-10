@@ -21,6 +21,7 @@ func LoadClientOptions() (client.Options, error) {
 	namespace := os.Getenv("TEMPORAL_NAMESPACE")
 	clientCert := os.Getenv("TEMPORAL_TLS_CERT")
 	clientKey := os.Getenv("TEMPORAL_TLS_KEY")
+	useTLS, _ := strconv.ParseBool(os.Getenv("USE_TLS"))
 
 	// Optional:
 	serverRootCACert := os.Getenv("TEMPORAL_SERVER_ROOT_CA_CERT")
@@ -53,42 +54,73 @@ func LoadClientOptions() (client.Options, error) {
 	// Return client options
 	if encyptPayload {
 
-		return client.Options{
-			HostPort:  targetHost,
-			Namespace: namespace,
-			ConnectionOptions: client.ConnectionOptions{
-				TLS: &tls.Config{
-					Certificates:       []tls.Certificate{cert},
-					RootCAs:            serverCAPool,
-					ServerName:         serverName,
-					InsecureSkipVerify: insecureSkipVerify,
-				},
-			},
-			Logger: NewTClientLogger(),
+    if useTLS {
+      // Temporal Cloud
 
-			// Set DataConverter to ensure that workflow inputs and results are
-			// encrypted/decrypted as required.
-			DataConverter: dataconverter.NewEncryptionDataConverter(
-				converter.GetDefaultDataConverter(),
-				dataconverter.DataConverterOptions{KeyID: os.Getenv("DATACONVERTER_ENCRYPTION_KEY_ID")},
-			),
-		}, nil
+		  return client.Options{
+			  HostPort:  targetHost,
+			  Namespace: namespace,
+			  ConnectionOptions: client.ConnectionOptions{
+				  TLS: &tls.Config{
+					  Certificates:       []tls.Certificate{cert},
+					  RootCAs:            serverCAPool,
+					  ServerName:         serverName,
+					  InsecureSkipVerify: insecureSkipVerify,
+				  },
+			  },
+			  Logger: NewTClientLogger(),
+
+			  // Set DataConverter to ensure that workflow inputs and results are
+			  // encrypted/decrypted as required.
+			  DataConverter: dataconverter.NewEncryptionDataConverter(
+				  converter.GetDefaultDataConverter(),
+				  dataconverter.DataConverterOptions{KeyID: os.Getenv("DATACONVERTER_ENCRYPTION_KEY_ID")},
+			  ),
+  		}, nil
+
+    } else {
+      // Self-hosted Temporal Server w/o TLS
+
+      return client.Options{
+        HostPort:  targetHost,
+        Namespace: namespace,
+			  Logger: NewTClientLogger(),
+			  DataConverter: dataconverter.NewEncryptionDataConverter(
+				  converter.GetDefaultDataConverter(),
+				  dataconverter.DataConverterOptions{KeyID: os.Getenv("DATACONVERTER_ENCRYPTION_KEY_ID")},
+			  ),
+  		}, nil
+    }
 
 	} else {
 
-		return client.Options{
-			HostPort:  targetHost,
-			Namespace: namespace,
-			ConnectionOptions: client.ConnectionOptions{
-				TLS: &tls.Config{
-					Certificates:       []tls.Certificate{cert},
-					RootCAs:            serverCAPool,
-					ServerName:         serverName,
-					InsecureSkipVerify: insecureSkipVerify,
-				},
-			},
-			Logger: NewTClientLogger(),
-		}, nil
+    if useTLS {
+      // Temporal Cloud
+
+		  return client.Options{
+			  HostPort:  targetHost,
+			  Namespace: namespace,
+			  ConnectionOptions: client.ConnectionOptions{
+				  TLS: &tls.Config{
+					  Certificates:       []tls.Certificate{cert},
+					  RootCAs:            serverCAPool,
+					  ServerName:         serverName,
+					  InsecureSkipVerify: insecureSkipVerify,
+				  },
+			  },
+			  Logger: NewTClientLogger(),
+		  }, nil
+
+    } else {
+      // Self-hosted Temporal Server w/o TLS
+
+      return client.Options{
+        HostPort:  targetHost,
+        Namespace: namespace,
+			  Logger: NewTClientLogger(),
+  		}, nil
+    }
+
 	}
 }
 
