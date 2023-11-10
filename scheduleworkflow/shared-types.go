@@ -1,5 +1,9 @@
 package scheduleworkflow
 
+import "os"
+
+var ScheduleWFTaskQueueName = os.Getenv("SCHEDULE_WF_TASK_QUEUE")
+
 // Schedule type
 type ScheduleDetails struct {
 	Id          string
@@ -24,7 +28,7 @@ var EmailNotificationStageCompleteSubject string = "Schedule Workflow Completed"
 var emailFromAddress string = "noreply@webapp.domain"
 
 // localhost mailserver (mailhog alias to localhost)
-//var SMTPHost string = "mailhog"
+// var SMTPHost string = "mailhog"
 var SMTPHost string = "localhost"
 var SMTPPort int = 1025
 

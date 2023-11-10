@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"os"
 
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/worker"
@@ -27,9 +29,13 @@ func main() {
 	}
 	defer c.Close()
 
-	log.Println("Go worker initialising..")
 	taskqueuename := mt.MoneyTransferTaskQueueName
-	w := worker.New(c, taskqueuename, worker.Options{})
+	hostname, _ := os.Hostname()
+	workername := "MoneyTransferWorker." + hostname + ":" + fmt.Sprintf("%d", os.Getpid())
+
+	log.Println("Go worker (" + workername + ") initialising..")
+
+	w := worker.New(c, taskqueuename, worker.Options{Identity: workername})
 
 	// This worker hosts both Workflow and Activity functions.
 	log.Println("Go worker registering for Workflow moneytransfer.Transfer..")

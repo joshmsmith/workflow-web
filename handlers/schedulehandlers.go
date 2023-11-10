@@ -82,6 +82,7 @@ func NewSchedule(w http.ResponseWriter, r *http.Request) {
 	log.Printf("NewSchedule: Creating new scheduleworkflow for: %s, comment: %s, minutes: %d", sd.Email, sd.Description, sd.Minutes)
 
 	err := sw.StartScheduleWorkflow(sd)
+
 	if err != nil {
 		log.Println("NewSchedule: StartScheduleWorkflow returned error,", err)
 	}

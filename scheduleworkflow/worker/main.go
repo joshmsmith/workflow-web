@@ -1,13 +1,15 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"os"
 
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/worker"
 
 	sw "webapp/scheduleworkflow"
-  "webapp/utils"
+	"webapp/utils"
 )
 
 func main() {
@@ -25,16 +27,19 @@ func main() {
 	}
 	defer c.Close()
 
-	log.Println("Go worker initialising..")
-	taskqueuename := "scheduleworkflow"
-	w := worker.New(c, taskqueuename, worker.Options{})
+	hostname, _ := os.Hostname()
+	workername := "ScheduleWFWorker." + hostname + ":" + fmt.Sprintf("%d", os.Getpid())
+
+	log.Println("Go worker (" + workername + ") initialising..")
+
+	w := worker.New(c, sw.ScheduleWFTaskQueueName, worker.Options{Identity: workername})
 
 	log.Println("Go worker registering for Workflow scheduleworkflow..")
 	w.RegisterWorkflow(sw.ScheduleWorkflow)
 	log.Println("Go worker registering for Activity ScheduleEmail..")
 	w.RegisterActivity(sw.ScheduleEmail)
 
-	log.Printf("%sGo worker listening on %s task queue..%s", sw.ColorGreen, taskqueuename, sw.ColorReset)
+	log.Printf("%sGo worker listening on %s task queue..%s", sw.ColorGreen, sw.ScheduleWFTaskQueueName, sw.ColorReset)
 	err = w.Run(worker.InterruptCh())
 	if err != nil {
 		log.Fatalln("Unable to start worker", err)

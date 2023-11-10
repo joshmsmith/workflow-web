@@ -1,13 +1,15 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"os"
 
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/worker"
 
 	so "webapp/standingorder"
-  "webapp/utils"
+	"webapp/utils"
 )
 
 func main() {
@@ -27,8 +29,12 @@ func main() {
 	}
 	defer c.Close()
 
-	log.Println("Go worker initialising..")
-	w := worker.New(c, so.StandingOrdersTaskQueueName, worker.Options{})
+	hostname, _ := os.Hostname()
+	workername := "StandingOrderWorker." + hostname + ":" + fmt.Sprintf("%d", os.Getpid())
+
+	log.Println("Go worker (" + workername + ") initialising..")
+
+	w := worker.New(c, so.StandingOrdersTaskQueueName, worker.Options{Identity: workername})
 
 	log.Println("Go worker registering for Workflow moneytransfer.StandingOrderWorkflow:")
 	w.RegisterWorkflow(so.StandingOrderWorkflow)
