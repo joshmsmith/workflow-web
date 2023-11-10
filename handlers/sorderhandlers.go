@@ -49,7 +49,8 @@ func ListSOrders(w http.ResponseWriter, r *http.Request) {
 	defer c.Close()
 
 	// Query using SearchAttribute
-	query := "CustomStringField='ACTIVE-SORDER' and CloseTime is null"
+	//query := "CustomStringField='ACTIVE-SORDER' and CloseTime is null"
+	query := "CustomStringField='ACTIVE-SORDER' and ExecutionStatus = 'Running'"
 
 	log.Printf("ListSOrders: Listing ACTIVE-SORDER Workflows:")
 
@@ -367,7 +368,8 @@ func checkWorkflowActive(c client.Client, wkflId string) (bool, error) {
 
 	// Query using SearchAttribute
 	namespace := os.Getenv("TEMPORAL_NAMESPACE")
-	query := "CustomStringField='ACTIVE-SORDER' and CloseTime is null"
+	//query := "CustomStringField='ACTIVE-SORDER' and CloseTime is null"
+	query := "CustomStringField='ACTIVE-SORDER' and ExecutionStatus = 'Running'"
 	var exec *commonpb.WorkflowExecution
 	var nextPageToken []byte
 	for hasMore := true; hasMore; hasMore = len(nextPageToken) > 0 {
