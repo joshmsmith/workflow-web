@@ -6,9 +6,10 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"webapp/utils"
 
 	"go.temporal.io/sdk/client"
+
+	u "webapp/utils"
 )
 
 func main() {
@@ -21,7 +22,7 @@ func main() {
 	scheduleID := *schid
 
 	// temporal client
-	clientOptions, err := utils.LoadClientOptions()
+	clientOptions, err := u.LoadClientOptions(u.NoSDKMetrics)
 	if err != nil {
 		log.Fatalf("Failed to load Temporal Cloud environment: %v", err)
 	}

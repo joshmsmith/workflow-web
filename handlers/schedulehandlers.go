@@ -11,7 +11,7 @@ import (
 
 	"go.temporal.io/sdk/client"
 
-	"webapp/utils"
+	u "webapp/utils"
 )
 
 /* ListSchedules */
@@ -19,7 +19,7 @@ func ListSchedules(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("ListSchedules: called")
 
-	clientOptions, err := utils.LoadClientOptions()
+	clientOptions, err := u.LoadClientOptions(u.NoSDKMetrics)
 	if err != nil {
 		log.Fatalf("ListSchedules: Failed to load Temporal Cloud environment: %v", err)
 	}
@@ -57,7 +57,7 @@ func ListSchedules(w http.ResponseWriter, r *http.Request) {
 		schedDetsList = append(schedDetsList, schedDets)
 	}
 
-	utils.Render(w, "templates/ListSchedules.html", schedDetsList)
+	u.Render(w, "templates/ListSchedules.html", schedDetsList)
 }
 
 /* NewSchedule */
@@ -67,7 +67,7 @@ func NewSchedule(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("NewSchedule: method:", r.Method) //get request method
 	if r.Method == "GET" {
-		utils.Render(w, "templates/NewSchedule.html", nil)
+		u.Render(w, "templates/NewSchedule.html", nil)
 		return
 	}
 
@@ -86,7 +86,7 @@ func NewSchedule(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("NewSchedule: StartScheduleWorkflow returned error,", err)
 	}
-	utils.Render(w, "templates/NewSchedule.html", struct{ Success bool }{true})
+	u.Render(w, "templates/NewSchedule.html", struct{ Success bool }{true})
 }
 
 /* ShowSchedule Details, template calls update post and delete*/
@@ -99,7 +99,7 @@ func ShowSchedule(w http.ResponseWriter, r *http.Request) {
 	schedDets.Id = r.FormValue("id")
 
 	// Connect to Temporal
-	clientOptions, err := utils.LoadClientOptions()
+	clientOptions, err := u.LoadClientOptions(u.NoSDKMetrics)
 	if err != nil {
 		log.Fatalf("ShowSchedule: Failed to load Temporal Cloud environment: %v", err)
 	}
@@ -119,7 +119,7 @@ func ShowSchedule(w http.ResponseWriter, r *http.Request) {
 	schedDets.Description = description.Schedule.Spec.Calendars[0].Comment
 	schedDets.Minutes = description.Schedule.Spec.Calendars[0].Minute[0].Start
 
-	utils.Render(w, "templates/ShowSchedule.html", schedDets)
+	u.Render(w, "templates/ShowSchedule.html", schedDets)
 }
 
 /* UpdateSchedule */
@@ -135,7 +135,7 @@ func UpdateSchedule(w http.ResponseWriter, r *http.Request) {
 	log.Printf("UpdateSchedule: scheduleID: %s, Description: %s, Minutes: %d", scheduleID, comment, minutes)
 
 	// Connect to Temporal
-	clientOptions, err := utils.LoadClientOptions()
+	clientOptions, err := u.LoadClientOptions(u.NoSDKMetrics)
 	if err != nil {
 		log.Fatalf("UpdateSchedule: Failed to load Temporal Cloud environment: %v", err)
 	}
@@ -152,7 +152,7 @@ func UpdateSchedule(w http.ResponseWriter, r *http.Request) {
 
 	if scheduleHandle == nil {
 		log.Printf("UpdateSchedule: Unable to read schedule for ScheduleID: %s\n", scheduleID)
-		utils.Render(w, "templates/UpdateSchedulePost.html", struct{ Success bool }{false})
+		u.Render(w, "templates/UpdateSchedulePost.html", struct{ Success bool }{false})
 	}
 
 	// update the schedule
@@ -192,7 +192,7 @@ func UpdateSchedule(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("UpdateSchedule: Failed to update schedule via DoUpdate, ", err)
 	}
 
-	utils.Render(w, "templates/UpdateSchedulePost.html", struct{ Success bool }{true})
+	u.Render(w, "templates/UpdateSchedulePost.html", struct{ Success bool }{true})
 }
 
 /* DeleteSchedule */
@@ -203,7 +203,7 @@ func DeleteSchedule(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm() //Parse url parameters passed, then parse the response packet for the POST body (request body)
 	scheduleID := r.FormValue("id")
 
-	clientOptions, err := utils.LoadClientOptions()
+	clientOptions, err := u.LoadClientOptions(u.NoSDKMetrics)
 	if err != nil {
 		log.Fatalf("DeleteSchedule: Failed to load Temporal Cloud environment: %v", err)
 	}
@@ -222,5 +222,5 @@ func DeleteSchedule(w http.ResponseWriter, r *http.Request) {
 	log.Println("DeleteSchedule: Deleting ScheduleID:", scheduleHandle.GetID())
 	scheduleHandle.Delete(ctx)
 
-	utils.Render(w, "templates/DeleteSchedule.html", struct{ Success bool }{true})
+	u.Render(w, "templates/DeleteSchedule.html", struct{ Success bool }{true})
 }

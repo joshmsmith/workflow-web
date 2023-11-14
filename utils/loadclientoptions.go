@@ -10,11 +10,14 @@ import (
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/converter"
 
+	"github.com/uber-go/tally/v4/prometheus"
+	sdktally "go.temporal.io/sdk/contrib/tally"
+
 	dataconverter "webapp/dataconverter"
 )
 
 /* LoadClientOptions - Return client options for Temporal Cloud */
-func LoadClientOptions() (client.Options, error) {
+func LoadClientOptions(addMetrics bool) (client.Options, error) {
 
 	// Read env variables
 	targetHost := os.Getenv("TEMPORAL_HOST_URL")
@@ -54,73 +57,105 @@ func LoadClientOptions() (client.Options, error) {
 	// Return client options
 	if encyptPayload {
 
-    if useTLS {
-      // Temporal Cloud
+		if useTLS {
+			// Temporal Cloud
 
-		  return client.Options{
-			  HostPort:  targetHost,
-			  Namespace: namespace,
-			  ConnectionOptions: client.ConnectionOptions{
-				  TLS: &tls.Config{
-					  Certificates:       []tls.Certificate{cert},
-					  RootCAs:            serverCAPool,
-					  ServerName:         serverName,
-					  InsecureSkipVerify: insecureSkipVerify,
-				  },
-			  },
-			  Logger: NewTClientLogger(),
+			if addMetrics {
+				return client.Options{
+					HostPort:  targetHost,
+					Namespace: namespace,
+					ConnectionOptions: client.ConnectionOptions{
+						TLS: &tls.Config{
+							Certificates:       []tls.Certificate{cert},
+							RootCAs:            serverCAPool,
+							ServerName:         serverName,
+							InsecureSkipVerify: insecureSkipVerify,
+						},
+					},
+					Logger: NewTClientLogger(),
 
-			  // Set DataConverter to ensure that workflow inputs and results are
-			  // encrypted/decrypted as required.
-			  DataConverter: dataconverter.NewEncryptionDataConverter(
-				  converter.GetDefaultDataConverter(),
-				  dataconverter.DataConverterOptions{KeyID: os.Getenv("DATACONVERTER_ENCRYPTION_KEY_ID")},
-			  ),
-  		}, nil
+					// Set DataConverter to ensure that workflow inputs and results are
+					// encrypted/decrypted as required.
+					DataConverter: dataconverter.NewEncryptionDataConverter(
+						converter.GetDefaultDataConverter(),
+						dataconverter.DataConverterOptions{KeyID: os.Getenv("DATACONVERTER_ENCRYPTION_KEY_ID")},
+					),
 
-    } else {
-      // Self-hosted Temporal Server w/o TLS
+					// Add SDK Metrics endpoint (for default Go SDK metrics)
+					MetricsHandler: sdktally.NewMetricsHandler(newPrometheusScope(
+						prometheus.Configuration{
+							ListenAddress: "0.0.0.0:9090",
+							TimerType:     "histogram",
+						},
+					)),
+				}, nil
 
-      return client.Options{
-        HostPort:  targetHost,
-        Namespace: namespace,
-			  Logger: NewTClientLogger(),
-			  DataConverter: dataconverter.NewEncryptionDataConverter(
-				  converter.GetDefaultDataConverter(),
-				  dataconverter.DataConverterOptions{KeyID: os.Getenv("DATACONVERTER_ENCRYPTION_KEY_ID")},
-			  ),
-  		}, nil
-    }
+			} else {
+
+				return client.Options{
+					HostPort:  targetHost,
+					Namespace: namespace,
+					ConnectionOptions: client.ConnectionOptions{
+						TLS: &tls.Config{
+							Certificates:       []tls.Certificate{cert},
+							RootCAs:            serverCAPool,
+							ServerName:         serverName,
+							InsecureSkipVerify: insecureSkipVerify,
+						},
+					},
+					Logger: NewTClientLogger(),
+
+					// Set DataConverter to ensure that workflow inputs and results are
+					// encrypted/decrypted as required.
+					DataConverter: dataconverter.NewEncryptionDataConverter(
+						converter.GetDefaultDataConverter(),
+						dataconverter.DataConverterOptions{KeyID: os.Getenv("DATACONVERTER_ENCRYPTION_KEY_ID")},
+					),
+				}, nil
+			}
+
+		} else {
+			// Self-hosted Temporal Server w/o TLS
+
+			return client.Options{
+				HostPort:  targetHost,
+				Namespace: namespace,
+				Logger:    NewTClientLogger(),
+				DataConverter: dataconverter.NewEncryptionDataConverter(
+					converter.GetDefaultDataConverter(),
+					dataconverter.DataConverterOptions{KeyID: os.Getenv("DATACONVERTER_ENCRYPTION_KEY_ID")},
+				),
+			}, nil
+		}
 
 	} else {
 
-    if useTLS {
-      // Temporal Cloud
+		if useTLS {
+			// Temporal Cloud
 
-		  return client.Options{
-			  HostPort:  targetHost,
-			  Namespace: namespace,
-			  ConnectionOptions: client.ConnectionOptions{
-				  TLS: &tls.Config{
-					  Certificates:       []tls.Certificate{cert},
-					  RootCAs:            serverCAPool,
-					  ServerName:         serverName,
-					  InsecureSkipVerify: insecureSkipVerify,
-				  },
-			  },
-			  Logger: NewTClientLogger(),
-		  }, nil
+			return client.Options{
+				HostPort:  targetHost,
+				Namespace: namespace,
+				ConnectionOptions: client.ConnectionOptions{
+					TLS: &tls.Config{
+						Certificates:       []tls.Certificate{cert},
+						RootCAs:            serverCAPool,
+						ServerName:         serverName,
+						InsecureSkipVerify: insecureSkipVerify,
+					},
+				},
+				Logger: NewTClientLogger(),
+			}, nil
 
-    } else {
-      // Self-hosted Temporal Server w/o TLS
+		} else {
+			// Self-hosted Temporal Server w/o TLS
 
-      return client.Options{
-        HostPort:  targetHost,
-        Namespace: namespace,
-			  Logger: NewTClientLogger(),
-  		}, nil
-    }
+			return client.Options{
+				HostPort:  targetHost,
+				Namespace: namespace,
+				Logger:    NewTClientLogger(),
+			}, nil
+		}
 
 	}
 }
-

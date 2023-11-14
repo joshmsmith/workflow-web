@@ -13,7 +13,7 @@ import (
 	"go.temporal.io/api/workflowservice/v1"
 	"go.temporal.io/sdk/client"
 
-	"webapp/utils"
+	u "webapp/utils"
 )
 
 func main() {
@@ -24,7 +24,7 @@ func main() {
 	}
 	log.Println("  Amend Parameters: --amount", *amount, "--period", *period)
 
-	clientOptions, err := utils.LoadClientOptions()
+	clientOptions, err := u.LoadClientOptions(u.NoSDKMetrics)
 	if err != nil {
 		log.Fatalf("Failed to load Temporal Cloud environment: %v", err)
 	}

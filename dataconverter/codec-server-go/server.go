@@ -134,7 +134,7 @@ func DecodeHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Println(ColorGreen, "Decrypted: payload[", i, "].Metadata:", dpayloads[i].Metadata, ColorReset)
 			fmt.Println(ColorGreen, "Decrypted: payload[", i, "] metadata encoding string:", string(dpayloads[i].Metadata["encoding"]), ColorReset)
 			fmt.Println(ColorGreen, "Decrypted: payload[", i, "].Data:", dpayloads[i].Data, ColorReset)
-			fmt.Println(ColorGreen, "Decrypted: payload[", i, "] data) string:", string(dpayloads[i].Data), ColorReset)
+			fmt.Println(ColorGreen, "Decrypted: payload[", i, "] data string:", string(dpayloads[i].Data), ColorReset)
 		}
 
 		// Response
