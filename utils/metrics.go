@@ -26,11 +26,11 @@ func newPrometheusScope(c prometheus.Configuration) tally.Scope {
 		CachedReporter:  reporter,
 		Separator:       prometheus.DefaultSeparator,
 		SanitizeOptions: &sdktally.PrometheusSanitizeOptions,
-		Prefix:          "workflow-metrics",
+		Prefix:          "",
 	}
 	scope, _ := tally.NewRootScope(scopeOpts, time.Second)
 	scope = sdktally.NewPrometheusNamingScope(scope)
 
-	log.Println("SDK metrics - prometheus metrics scope created: http://0.0.0.0:9090")
+	log.Println("Worker SDK Metrics Prometheus scope created: http://0.0.0.0:8077/metrics")
 	return scope
 }

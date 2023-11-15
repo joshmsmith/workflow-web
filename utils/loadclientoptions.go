@@ -84,7 +84,7 @@ func LoadClientOptions(addMetrics bool) (client.Options, error) {
 					// Add SDK Metrics endpoint (for default Go SDK metrics)
 					MetricsHandler: sdktally.NewMetricsHandler(newPrometheusScope(
 						prometheus.Configuration{
-							ListenAddress: "0.0.0.0:9090",
+							ListenAddress: "0.0.0.0:8077",
 							TimerType:     "histogram",
 						},
 					)),
