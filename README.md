@@ -110,7 +110,7 @@ Note: To simulate a banking service outage on an activity without the need to re
 
 ## Start the webapp and navigate to view the local tasks
 
-Start the webapp, by default it listens on port localhost:8085
+Start the webapp, by default it listens on port [localhost:8085](http://localhost:8085)
 ```
 go run webapp.go
 ```
