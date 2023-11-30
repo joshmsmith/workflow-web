@@ -9,14 +9,14 @@ Use this demo to show the **simplicity** and **durability** enabled by Temporal 
 
 ## Velocity
 
-### Focus on coding  the business flow as happy path, let Temporal handle the risks
+### Focus on coding the business flow predictably as if there are no distributed systems, let Temporal handle the risks of the distributed reality
 * It should be simple for an application to survive a if it crashes or terminates in the middle of a transaction. With Temporal, this is simple. The Temporal runtime makes your your code run to completion, surviving failures along the way.
 * It should be simple with Temporal for an application to survive if a critical service it calls is down or unavailable. With Temporal, this is simple.
 
 [As you can see from the code - no code is needed](./moneytransfer/transfer-workflow.go) (other than using the SDK). See it described below [script](#test-some-failure-states) - then test it out for yourself.
 
 ### Enjoy simple future programming interface with Temporal 
-It should be simple to create code that runs at a specific time or times in the future without complexity or confusion, or having your system trip over itself in the future. With Temporal, this is simple and easy to do, even schedules from user input, such as a scheduled business process, for example moving money. Simple to create, simple to understand, simple to debug.
+It should be simple to create code that runs at a specific time or times in the future without complexity or confusion, or having your system trip over itself in the future. With Temporal, this is simple and easy to do, even schedules from user input, such as a scheduled business process, for example moving money. Simple to create, simple to understand, simple to debug, simple to test.
 [See the code](./scheduleworkflow/start-scheduleworkflow.go).
 
 
