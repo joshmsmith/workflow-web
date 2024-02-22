@@ -13,7 +13,7 @@ import (
 	u "webapp/utils"
 )
 
-/* Main */
+// starter with included payment info
 func main() {
 
 	log.Println("workflow start program..")

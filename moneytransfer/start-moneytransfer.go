@@ -15,6 +15,7 @@ import (
 
 /*
  * StartMoneyTransfer - App entry point to run Temporal Workflows
+ * This starts the workflow with passed in Payment Details
  */
 func StartMoneyTransfer(pmnt *PaymentDetails) (wfinfo *WorkflowInfo, starterr error) {
 
